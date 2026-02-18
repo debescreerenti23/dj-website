@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>DJ Portfolio</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>🎧 DJ Portfolio</h1>
+  <div id="about" class="about-section">
+  <img src="images/dj-photo.jpg" alt="DJ" id="dj-photo">
+  <h2>javilindj</h2>
+  <p>¡Hola! Soy DJ y productor musical. Me encanta mezclar tech house y música electrónica, y comparto mis sesiones aquí para que las disfrutes. También estoy aprendiendo desarrollo web y este proyecto combina mis dos pasiones: música y programación.</p>
+  </div>
+  <div class="add-session">
+  <h2>Añadir nueva sesión</h2>
+  <form id="session-form">
+    <input type="text" id="title" placeholder="Título" required><br><br>
+    <textarea id="description" placeholder="Descripción"></textarea><br><br>
+    <input type="number" id="year" placeholder="Año" required><br><br>
+    <input type="url" id="downloadUrl" placeholder="Link de descarga" required><br><br>
+    <button type="submit">Añadir sesión</button>
+  </form>
+</div>
+
+
+
+  <div id="sessions"></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

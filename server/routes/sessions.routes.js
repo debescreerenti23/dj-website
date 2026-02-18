@@ -1,15 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const sessionsController = require("../controllers/sessions.controller");
 
-router.get("/", (req, res) => {
-  res.json([
-    {
-      id: 1,
-      title: "Session Tech House 2025",
-      year: 2025,
-      downloadUrl: "https://drive.google.com/..."
-    }
-  ]);
-});
+router.get("/", sessionsController.getSessions);
 
 module.exports = router;
+
+router.post("/", sessionsController.createSession);
+
+router.delete("/:id", sessionsController.deleteSession);
+
+router.put("/:id", sessionsController.updateSession);

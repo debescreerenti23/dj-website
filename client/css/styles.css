@@ -1,0 +1,160 @@
+/* ---------------------- GENERAL ---------------------- */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #111;
+  color: #eee;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: #1db954;
+}
+
+/* ---------------------- SOBRE MÍ ---------------------- */
+.about-section {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+}
+
+#dj-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 3px solid #1db954;
+}
+
+.about-section h2 {
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.about-section p {
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+/* ---------------------- FORMULARIO AÑADIR SESIÓN ---------------------- */
+.add-session {
+  max-width: 500px;
+  margin: 0 auto 50px auto;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+  transition: transform 0.2s;
+}
+
+.add-session:hover {
+  transform: translateY(-5px);
+}
+
+.add-session h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1db954;
+}
+
+.add-session input,
+.add-session textarea {
+  width: 90%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  background-color: #222;
+  color: #eee;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.2s;
+}
+
+.add-session input:focus,
+.add-session textarea:focus {
+  background-color: #333;
+  outline: 2px solid #1db954;
+}
+
+.add-session button {
+  width: 50%;
+  max-width: 200px;
+  padding: 12px;
+  display: block;
+  margin: 0 auto;
+  background-color: #1db954;
+  color: #111;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.add-session button:hover {
+  background-color: #17a444;
+  transform: scale(1.05);
+}
+
+/* ---------------------- LISTA DE SESIONES ---------------------- */
+#sessions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+#sessions div {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#sessions div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+}
+
+#sessions h3 {
+  margin: 0 0 10px 0;
+  color: #1db954;
+  font-size: 1.2rem;
+}
+
+#sessions p {
+  margin: 5px 0;
+  color: #ccc;
+}
+
+#sessions a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #1db954;
+  color: #111;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+#sessions a:hover {
+  background-color: #17a444;
+  transform: scale(1.05);
+}

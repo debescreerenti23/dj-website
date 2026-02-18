@@ -1,3 +1,6 @@
+const path = require("path");
+
+
 const express = require("express");
 const cors = require("cors");
 const sessionsRoutes = require("./routes/sessions.routes");
@@ -6,6 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../client")));
 
 app.get("/", (req, res) => {
   res.json({ message: "Servidor DJ funcionando 🎧" });

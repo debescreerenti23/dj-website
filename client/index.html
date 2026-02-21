@@ -20,7 +20,7 @@
 
   <img src="images/dj-photo.jpg" alt="DJ" id="dj-photo">
 
-  <h2>Javilindj</h2>
+  <h3>Javilindj</h3>
 
   <p>
     ¡Hola! Soy <strong>Javilindj</strong>, DJ especializado en música 
@@ -28,7 +28,6 @@
     con solo 2 platos y una colección de vinilos. Tras un breve descanso, volví 
     explorando diferentes controladoras y sistemas hasta encontrar mi pasión en 
     <strong>Traktor</strong>, su sistema y equipos.
-    <br><br>
     A continuación, te presento mis sesiones y algunos mashups para que los escuches 
     y disfrutes. También puedes buscarme en redes sociales y contratarme para tu evento.
   </p>
@@ -46,7 +45,7 @@
   </section>
 
   <!-- FORMULARIO AÑADIR SESIÓN -->
-  <div class="add-session">
+  <div class="add-session" style="display: none;">
     <h2>Añadir nueva sesión</h2>
     <form id="session-form">
       <input type="text" id="title" placeholder="Título" required><br><br>
@@ -68,13 +67,6 @@
   z-index: 9999;
 "></div>
 
-<div id="global-player">
-  <div class="player-header">🎧 REPRODUCTOR</div>
-  <audio id="audio-player" controls>
-    <source id="audio-source" src="" type="audio/mpeg">
-    Tu navegador no soporta audio.
-  </audio>
-</div>
 
   <script src="js/main.js"></script>
 </body>

@@ -315,13 +315,23 @@ body {
 
 /* Foto DJ */
 #dj-photo {
-  width: 170px;
-  height: 170px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   border: 3px solid #00ffe0;
   box-shadow: 0 0 20px rgba(0,255,224,0.6);
+}
+
+#dj-photo:hover {
+  text-shadow:
+    0 0 10px #00ffe0,
+    0 0 20px #00ffe0,
+    0 0 30px #00ffe0,
+    0 0 60px #00ffe0,
+    0 0 120px #00ffe0;
+  transform: scale(1.05);
 }
 
 /* Línea inferior tipo pista de energía */
@@ -445,35 +455,12 @@ body {
   box-shadow: 0 0 20px rgba(255,170,0,0.8);
 }
 
-/* ================= GLOBAL PLAYER ================= */
 
-#global-player {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 320px;
-  background: #111;
-  border: 1px solid #00ffe0;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,255,224,0.4);
-  padding: 10px;
-  z-index: 9999;
-}
 
-.player-header {
-  color: #00ffe0;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 8px;
-  letter-spacing: 1px;
-}
 
-#audio-player {
-  width: 100%;
-}
 
 /* ===================== EFECTO NOMBRE DJ ===================== */
-#about h2 {
+#about h3 {
   font-size: 2.5rem;
   font-weight: bold;
   text-align: center;
@@ -484,11 +471,11 @@ body {
     0 0 20px #00ffe0,
     0 0 40px #00ffe0,
     0 0 80px #00ffe0;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   transition: all 0.3s ease-in-out;
 }
 
-#about h2:hover {
+#about h3:hover {
   text-shadow:
     0 0 10px #00ffe0,
     0 0 20px #00ffe0,

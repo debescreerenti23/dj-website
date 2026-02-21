@@ -1,8 +1,3 @@
-// ================= VARIABLES =================
-
-let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
-let isAdmin = localStorage.getItem("isAdmin") === "true";
-
 // ================= ELEMENTOS =================
 
 const loginForm = document.getElementById("login-form");
@@ -11,25 +6,31 @@ const logoutBtn = document.getElementById("logout-btn");
 
 const sessionForm = document.getElementById("session-form");
 const sessionsContainer = document.getElementById("sessions");
+const addSessionDiv = document.querySelector(".add-session");
 
-// ================= CONTROL UI ADMIN =================
+// ================= CONFIG =================
+
+const API_URL = "http://localhost:3000";
+
+// ================= UI ADMIN =================
 
 function updateAdminUI() {
-  if (isAdmin) {
+  const token = localStorage.getItem("adminToken");
+
+  if (token) {
+    addSessionDiv.style.display = "block";
     loginForm.style.display = "none";
     adminIndicator.style.display = "block";
-    adminIndicator.textContent = "🟢 Sesión iniciada como Admin";
-    logoutBtn.style.display = "inline-block";
-    sessionForm.style.display = "block";
+    logoutBtn.style.display = "block";
   } else {
+    addSessionDiv.style.display = "none";
     loginForm.style.display = "block";
     adminIndicator.style.display = "none";
     logoutBtn.style.display = "none";
-    sessionForm.style.display = "none";
   }
 }
 
-// ================= MENSAJE FLOTANTE =================
+// ================= TOAST =================
 
 function showToast(message, color = "#00ffe0") {
   const toast = document.createElement("div");
@@ -55,58 +56,46 @@ function showToast(message, color = "#00ffe0") {
 
 // ================= LOGIN =================
 
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  if (username === "admin" && password === "1234") {
-    isAdmin = true;
-    localStorage.setItem("isAdmin", "true");
+  const res = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
 
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem("adminToken", data.token);
     updateAdminUI();
     showToast("Login correcto");
-    loadSessions();
   } else {
-    showToast("Usuario o contraseña incorrectos", "#ff004c");
+    showToast("Credenciales incorrectas", "#ff004c");
   }
 });
 
 // ================= LOGOUT =================
 
 logoutBtn.addEventListener("click", () => {
-  const confirmLogout = confirm("⚠️ Se va a cerrar la sesión. ¿Continuar?");
-  if (!confirmLogout) return;
-
-  isAdmin = false;
-  localStorage.removeItem("isAdmin");
-
+  localStorage.removeItem("adminToken");
   updateAdminUI();
   showToast("Sesión cerrada", "#ffaa00");
-  loadSessions();
 });
-
-// ================= GUARDAR SESIONES =================
-
-function saveSessions() {
-  localStorage.setItem("sessions", JSON.stringify(sessions));
-}
 
 // ================= CARGAR SESIONES =================
 
-function loadSessions() {
-
-  // Compatibilidad sesiones antiguas
-  sessions.forEach(session => {
-    if (session.downloads === undefined) {
-      session.downloads = 0;
-    }
-  });
+async function loadSessions() {
+  const res = await fetch(`${API_URL}/sessions`);
+  const sessions = await res.json();
 
   sessionsContainer.innerHTML = "";
 
-  sessions.forEach((session, index) => {
+  sessions.forEach(session => {
 
     const sessionDiv = document.createElement("div");
     sessionDiv.style.border = "1px solid #00ffe0";
@@ -119,48 +108,30 @@ function loadSessions() {
     sessionDiv.innerHTML = `
       <h3>${session.title} (${session.year})</h3>
       <p>${session.description}</p>
-      <p style="color:#00ffe0;">⬇ Descargas: ${session.downloads}</p>
+      <p style="color:#00ffe0;">⬇ Descargas: ${session.downloads || 0}</p>
     `;
-
-    // ================= PLAY =================
-
-    const playBtn = document.createElement("button");
-    playBtn.textContent = "PLAY";
-    playBtn.classList.add("traktor-btn");
-
-    playBtn.addEventListener("click", () => {
-      const audioPlayer = document.getElementById("audio-player");
-      const audioSource = document.getElementById("audio-source");
-
-      audioSource.src = session.downloadUrl;
-      audioPlayer.load();
-      audioPlayer.play();
-
-      showToast(`Reproduciendo: ${session.title}`);
-    });
-
-    sessionDiv.appendChild(playBtn);
 
     // ================= DOWNLOAD =================
 
     const downloadBtn = document.createElement("button");
-    downloadBtn.innerHTML = "⬇ DOWNLOAD";
+    downloadBtn.textContent = "⬇ DOWNLOAD";
     downloadBtn.classList.add("traktor-btn");
     downloadBtn.style.marginLeft = "10px";
 
-    downloadBtn.addEventListener("click", () => {
+    downloadBtn.addEventListener("click", async () => {
 
-      const link = document.createElement("a");
-      link.href = session.downloadUrl;
-      link.download = session.title + ".mp3";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      window.open(session.downloadUrl, "_blank");
 
-      session.downloads++;
-      saveSessions();
+      await fetch(`${API_URL}/sessions/${session.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...session,
+          downloads: (session.downloads || 0) + 1
+        })
+      });
+
       loadSessions();
-
       showToast("Descarga iniciada");
     });
 
@@ -168,7 +139,9 @@ function loadSessions() {
 
     // ================= BOTONES ADMIN =================
 
-    if (isAdmin) {
+    const token = localStorage.getItem("adminToken");
+
+    if (token) {
 
       const editBtn = document.createElement("button");
       editBtn.textContent = "EDITAR";
@@ -176,16 +149,12 @@ function loadSessions() {
       editBtn.style.marginLeft = "10px";
 
       editBtn.addEventListener("click", () => {
-
         document.getElementById("title").value = session.title;
         document.getElementById("description").value = session.description;
         document.getElementById("year").value = session.year;
         document.getElementById("downloadUrl").value = session.downloadUrl;
 
-        sessions.splice(index, 1);
-        saveSessions();
-        loadSessions();
-
+        sessionForm.dataset.editId = session.id;
         showToast("Editando sesión", "#ffaa00");
       });
 
@@ -194,15 +163,17 @@ function loadSessions() {
       deleteBtn.classList.add("traktor-btn");
       deleteBtn.style.marginLeft = "10px";
 
-      deleteBtn.addEventListener("click", () => {
+      deleteBtn.addEventListener("click", async () => {
+        if (!confirm("⚠️ Esta sesión se eliminará. ¿Continuar?")) return;
 
-        const confirmDelete = confirm("⚠️ Esta sesión se eliminará. ¿Continuar?");
-        if (!confirmDelete) return;
+        await fetch(`${API_URL}/sessions/${session.id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
 
-        sessions.splice(index, 1);
-        saveSessions();
         loadSessions();
-
         showToast("Sesión eliminada", "#ff004c");
       });
 
@@ -214,33 +185,63 @@ function loadSessions() {
   });
 }
 
-// ================= AÑADIR SESIÓN =================
+// ================= CREAR / EDITAR =================
 
-sessionForm.addEventListener("submit", (e) => {
+sessionForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  if (!isAdmin) {
-    showToast("Debes iniciar sesión como admin", "#ff004c");
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    showToast("Debes iniciar sesión", "#ff004c");
     return;
   }
 
-  const newSession = {
-    title: document.getElementById("title").value,
-    description: document.getElementById("description").value,
-    year: document.getElementById("year").value,
-    downloadUrl: document.getElementById("downloadUrl").value,
-    downloads: 0
-  };
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const year = document.getElementById("year").value;
+  const downloadUrl = document.getElementById("downloadUrl").value;
 
-  sessions.push(newSession);
-  saveSessions();
-  loadSessions();
+  const editId = sessionForm.dataset.editId;
+
+  if (editId) {
+
+    await fetch(`${API_URL}/sessions/${editId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ title, description, year, downloadUrl })
+    });
+
+    delete sessionForm.dataset.editId;
+    showToast("Sesión actualizada", "#ffaa00");
+
+  } else {
+
+    await fetch(`${API_URL}/sessions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        year,
+        downloadUrl,
+        downloads: 0
+      })
+    });
+
+    showToast("Sesión añadida");
+  }
 
   sessionForm.reset();
-  showToast("Sesión añadida correctamente");
+  loadSessions();
 });
 
-// ================= INICIAR =================
+// ================= INIT =================
 
 updateAdminUI();
 loadSessions();

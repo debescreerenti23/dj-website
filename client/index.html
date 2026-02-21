@@ -6,26 +6,75 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>🎧 DJ Portfolio</h1>
-  <div id="about" class="about-section">
-  <img src="images/dj-photo.jpg" alt="DJ" id="dj-photo">
-  <h2>javilindj</h2>
-  <p>¡Hola! Soy DJ y productor musical. Me encanta mezclar tech house y música electrónica, y comparto mis sesiones aquí para que las disfrutes. También estoy aprendiendo desarrollo web y este proyecto combina mis dos pasiones: música y programación.</p>
+ <div id="about" class="about-section">
+  <div class="club-background"></div>
+  <div class="about-glow"></div>
+
+  <div class="equalizer">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
-  <div class="add-session">
-  <h2>Añadir nueva sesión</h2>
-  <form id="session-form">
-    <input type="text" id="title" placeholder="Título" required><br><br>
-    <textarea id="description" placeholder="Descripción"></textarea><br><br>
-    <input type="number" id="year" placeholder="Año" required><br><br>
-    <input type="url" id="downloadUrl" placeholder="Link de descarga" required><br><br>
-    <button type="submit">Añadir sesión</button>
-  </form>
+
+  <img src="images/dj-photo.jpg" alt="DJ" id="dj-photo">
+
+  <h2>Javilindj</h2>
+
+  <p>
+    ¡Hola! Soy <strong>Javilindj</strong>, DJ especializado en música 
+    <strong>hardcore, jumpstyle y newstyle</strong>. Comencé mi aventura musical en 2003 
+    con solo 2 platos y una colección de vinilos. Tras un breve descanso, volví 
+    explorando diferentes controladoras y sistemas hasta encontrar mi pasión en 
+    <strong>Traktor</strong>, su sistema y equipos.
+    <br><br>
+    A continuación, te presento mis sesiones y algunos mashups para que los escuches 
+    y disfrutes. También puedes buscarme en redes sociales y contratarme para tu evento.
+  </p>
 </div>
 
+  <!-- LOGIN / INDICADOR / LOGOUT -->
+  <section id="login-section" class="login-section">
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Usuario" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <div id="admin-indicator" style="display:none; margin-top:10px; font-weight:bold;"></div>
+    <button id="logout-btn" style="display:none; margin-top:10px;">Cerrar sesión</button>
+  </section>
 
+  <!-- FORMULARIO AÑADIR SESIÓN -->
+  <div class="add-session">
+    <h2>Añadir nueva sesión</h2>
+    <form id="session-form">
+      <input type="text" id="title" placeholder="Título" required><br><br>
+      <textarea id="description" placeholder="Descripción"></textarea><br><br>
+      <input type="number" id="year" placeholder="Año" required><br><br>
+      <input type="url" id="downloadUrl" placeholder="Link de descarga" required><br><br>
+      <button type="submit" class="traktor-btn">Añadir sesión</button>
+    </form>
+  </div>
 
+  <!-- LISTA DE SESIONES -->
   <div id="sessions"></div>
+
+  <!-- Contenedor de mensajes flotantes -->
+<div id="toast-container" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+"></div>
+
+<div id="global-player">
+  <div class="player-header">🎧 REPRODUCTOR</div>
+  <audio id="audio-player" controls>
+    <source id="audio-source" src="" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+</div>
 
   <script src="js/main.js"></script>
 </body>

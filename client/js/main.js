@@ -1,247 +1,178 @@
-// ================= ELEMENTOS =================
-
-const loginForm = document.getElementById("login-form");
-const adminIndicator = document.getElementById("admin-indicator");
-const logoutBtn = document.getElementById("logout-btn");
-
-const sessionForm = document.getElementById("session-form");
-const sessionsContainer = document.getElementById("sessions");
-const addSessionDiv = document.querySelector(".add-session");
-
-// ================= CONFIG =================
-
 const API_URL = "http://localhost:3000";
 
-// ================= UI ADMIN =================
+// ELEMENTOS DOM
+const loginForm = document.getElementById("login-form");
+const sessionForm = document.getElementById("session-form");
+const sessionsContainer = document.getElementById("sessions");
+const logoutBtn = document.getElementById("logout-btn");
+const searchInput = document.getElementById("search-input");
+const yearFilter = document.getElementById("year-filter");
+const submitBtn = document.getElementById("submit-btn");
 
+let editingSessionId = null;
+
+// --- UI & TOASTS ---
 function updateAdminUI() {
-  const token = localStorage.getItem("adminToken");
-
-  if (token) {
-    addSessionDiv.style.display = "block";
-    loginForm.style.display = "none";
-    adminIndicator.style.display = "block";
-    logoutBtn.style.display = "block";
-  } else {
-    addSessionDiv.style.display = "none";
-    loginForm.style.display = "block";
-    adminIndicator.style.display = "none";
-    logoutBtn.style.display = "none";
-  }
+    const token = localStorage.getItem("adminToken");
+    document.getElementById("admin-controls").style.display = token ? "block" : "none";
+    loginForm.style.display = token ? "none" : "block";
 }
-
-// ================= TOAST =================
 
 function showToast(message, color = "#00ffe0") {
-  const toast = document.createElement("div");
-  toast.textContent = message;
-
-  toast.style.position = "fixed";
-  toast.style.bottom = "20px";
-  toast.style.right = "20px";
-  toast.style.background = "#111";
-  toast.style.color = color;
-  toast.style.border = `1px solid ${color}`;
-  toast.style.padding = "10px 15px";
-  toast.style.borderRadius = "6px";
-  toast.style.boxShadow = `0 0 10px ${color}`;
-  toast.style.zIndex = "9999";
-
-  document.body.appendChild(toast);
-
-  setTimeout(() => {
-    toast.remove();
-  }, 3000);
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.style.borderColor = color;
+    toast.style.color = color;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
 }
 
-// ================= LOGIN =================
+// --- FILTROS ---
+function filterSessions() {
+    const term = searchInput.value.toLowerCase();
+    const year = yearFilter.value;
+    const cards = document.querySelectorAll(".session-card");
 
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  const res = await fetch(`${API_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    localStorage.setItem("adminToken", data.token);
-    updateAdminUI();
-    showToast("Login correcto");
-  } else {
-    showToast("Credenciales incorrectas", "#ff004c");
-  }
-});
-
-// ================= LOGOUT =================
-
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("adminToken");
-  updateAdminUI();
-  showToast("Sesión cerrada", "#ffaa00");
-});
-
-// ================= CARGAR SESIONES =================
-
-async function loadSessions() {
-  const res = await fetch(`${API_URL}/sessions`);
-  const sessions = await res.json();
-
-  sessionsContainer.innerHTML = "";
-
-  sessions.forEach(session => {
-
-    const sessionDiv = document.createElement("div");
-    sessionDiv.style.border = "1px solid #00ffe0";
-    sessionDiv.style.padding = "15px";
-    sessionDiv.style.margin = "15px 0";
-    sessionDiv.style.borderRadius = "10px";
-    sessionDiv.style.background = "#111";
-    sessionDiv.style.color = "white";
-
-    sessionDiv.innerHTML = `
-      <h3>${session.title} (${session.year})</h3>
-      <p>${session.description}</p>
-      <p style="color:#00ffe0;">⬇ Descargas: ${session.downloads || 0}</p>
-    `;
-
-    // ================= DOWNLOAD =================
-
-    const downloadBtn = document.createElement("button");
-    downloadBtn.textContent = "⬇ DOWNLOAD";
-    downloadBtn.classList.add("traktor-btn");
-    downloadBtn.style.marginLeft = "10px";
-
-    downloadBtn.addEventListener("click", async () => {
-
-      window.open(session.downloadUrl, "_blank");
-
-      await fetch(`${API_URL}/sessions/${session.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...session,
-          downloads: (session.downloads || 0) + 1
-        })
-      });
-
-      loadSessions();
-      showToast("Descarga iniciada");
+    cards.forEach(card => {
+        const title = card.querySelector("h3").textContent.toLowerCase();
+        const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
+        
+        const matchSearch = title.includes(term);
+        const matchYear = year === "all" || cardYear === year;
+        
+        card.style.display = (matchSearch && matchYear) ? "block" : "none";
     });
-
-    sessionDiv.appendChild(downloadBtn);
-
-    // ================= BOTONES ADMIN =================
-
-    const token = localStorage.getItem("adminToken");
-
-    if (token) {
-
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "EDITAR";
-      editBtn.classList.add("traktor-btn");
-      editBtn.style.marginLeft = "10px";
-
-      editBtn.addEventListener("click", () => {
-        document.getElementById("title").value = session.title;
-        document.getElementById("description").value = session.description;
-        document.getElementById("year").value = session.year;
-        document.getElementById("downloadUrl").value = session.downloadUrl;
-
-        sessionForm.dataset.editId = session.id;
-        showToast("Editando sesión", "#ffaa00");
-      });
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "DELETE";
-      deleteBtn.classList.add("traktor-btn");
-      deleteBtn.style.marginLeft = "10px";
-
-      deleteBtn.addEventListener("click", async () => {
-        if (!confirm("⚠️ Esta sesión se eliminará. ¿Continuar?")) return;
-
-        await fetch(`${API_URL}/sessions/${session.id}`, {
-          method: "DELETE",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        loadSessions();
-        showToast("Sesión eliminada", "#ff004c");
-      });
-
-      sessionDiv.appendChild(editBtn);
-      sessionDiv.appendChild(deleteBtn);
-    }
-
-    sessionsContainer.appendChild(sessionDiv);
-  });
 }
 
-// ================= CREAR / EDITAR =================
+function updateYearOptions(sessions) {
+    const years = [...new Set(sessions.map(s => s.year))].sort((a,b) => b-a);
+    const current = yearFilter.value;
+    yearFilter.innerHTML = '<option value="all">Todos los años</option>';
+    years.forEach(y => {
+        const opt = document.createElement("option");
+        opt.value = y; opt.textContent = y;
+        yearFilter.appendChild(opt);
+    });
+    yearFilter.value = current;
+}
+
+// --- CORE ---
+async function loadSessions() {
+    try {
+        const res = await fetch(`${API_URL}/sessions`);
+        const sessions = await res.json();
+        const token = localStorage.getItem("adminToken");
+        
+        updateYearOptions(sessions);
+        sessionsContainer.innerHTML = "";
+
+        sessions.forEach(s => {
+            const card = document.createElement("div");
+            card.className = "session-card";
+            card.innerHTML = `
+                <h3>${s.title} <span>(${s.year})</span></h3>
+                <p>${s.description}</p>
+                <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
+                <div class="card-actions">
+                    <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DOWNLOAD</button>
+                    ${token ? `
+                        <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${s.title}', '${s.description}', '${s.year}', '${s.downloadUrl}')">EDIT</button>
+                        <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">DEL</button>
+                    ` : ''}
+                </div>
+            `;
+            sessionsContainer.appendChild(card);
+        });
+        filterSessions();
+    } catch (err) { console.error(err); }
+}
+
+async function handleDownload(id, url) {
+    window.open(url, "_blank");
+    const el = document.getElementById(`count-${id}`);
+    if (el) el.textContent = parseInt(el.textContent) + 1;
+    await fetch(`${API_URL}/sessions/${id}/download`, { method: "POST" });
+}
+
+// --- CRUD ---
+async function deleteSession(id) {
+    if (!confirm("¿Eliminar sesión de la maleta?")) return;
+    const token = localStorage.getItem("adminToken");
+    const res = await fetch(`${API_URL}/sessions/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (res.ok) { showToast("Sesión eliminada"); loadSessions(); }
+}
+
+function prepareEdit(id, title, desc, year, url) {
+    editingSessionId = id;
+    document.getElementById("title").value = title;
+    document.getElementById("description").value = desc;
+    document.getElementById("year").value = year;
+    document.getElementById("downloadUrl").value = url;
+    
+    submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
+    submitBtn.style.color = "#ffaa00";
+    submitBtn.style.borderColor = "#ffaa00";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 sessionForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    const token = localStorage.getItem("adminToken");
+    const data = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        year: document.getElementById("year").value,
+        downloadUrl: document.getElementById("downloadUrl").value
+    };
 
-  const token = localStorage.getItem("adminToken");
-  if (!token) {
-    showToast("Debes iniciar sesión", "#ff004c");
-    return;
-  }
+    const method = editingSessionId ? "PUT" : "POST";
+    const url = editingSessionId ? `${API_URL}/sessions/${editingSessionId}` : `${API_URL}/sessions`;
 
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
-  const year = document.getElementById("year").value;
-  const downloadUrl = document.getElementById("downloadUrl").value;
-
-  const editId = sessionForm.dataset.editId;
-
-  if (editId) {
-
-    await fetch(`${API_URL}/sessions/${editId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({ title, description, year, downloadUrl })
+    const res = await fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(data)
     });
 
-    delete sessionForm.dataset.editId;
-    showToast("Sesión actualizada", "#ffaa00");
-
-  } else {
-
-    await fetch(`${API_URL}/sessions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        year,
-        downloadUrl,
-        downloads: 0
-      })
-    });
-
-    showToast("Sesión añadida");
-  }
-
-  sessionForm.reset();
-  loadSessions();
+    if (res.ok) {
+        showToast(editingSessionId ? "Actualizado" : "Guardado");
+        editingSessionId = null;
+        sessionForm.reset();
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
+        submitBtn.style = ""; 
+        loadSessions();
+    }
 });
 
-// ================= INIT =================
+// --- AUTH & FILTERS ---
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            username: document.getElementById("username").value, 
+            password: document.getElementById("password").value 
+        })
+    });
+    const data = await res.json();
+    if (res.ok) { localStorage.setItem("adminToken", data.token); updateAdminUI(); loadSessions(); }
+    else showToast("Error de acceso", "#ff004c");
+});
+
+logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("adminToken");
+    updateAdminUI();
+    loadSessions();
+});
+
+searchInput.addEventListener("input", filterSessions);
+yearFilter.addEventListener("change", filterSessions);
 
 updateAdminUI();
 loadSessions();

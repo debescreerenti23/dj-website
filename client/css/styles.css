@@ -1,486 +1,202 @@
-/* ---------------------- GENERAL ---------------------- */
+:root {
+  --neon-cyan: #00ffe0;
+  --dark-bg: #0a0a0a;
+  --panel-bg: #141414;
+  --danger: #ff004c;
+  --warning: #ffaa00;
+}
+
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #111;
-  color: #eee;
-  padding: 20px;
+  background-color: #000;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 40px;
-  font-size: 2.5rem;
-  letter-spacing: 2px;
-  color: #1db954;
-}
-
-/* ---------------------- SOBRE MÍ ---------------------- */
-.about-section {
-  text-align: center;
-  margin-bottom: 50px;
-  padding: 20px;
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-}
-
-#dj-photo {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 3px solid #1db954;
-}
-
-.about-section h2 {
-  margin-bottom: 10px;
-  font-size: 1.8rem;
-}
-
-.about-section p {
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-  font-size: 1rem;
-  color: #ccc;
-}
-
-/* ---------------------- FORMULARIO AÑADIR SESIÓN ---------------------- */
-.add-session {
-  max-width: 500px;
-  margin: 0 auto 50px auto;
-  padding: 20px;
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-  transition: transform 0.2s;
-}
-
-.add-session:hover {
-  transform: translateY(-5px);
-}
-
-.add-session h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #1db954;
-}
-
-.add-session input,
-.add-session textarea {
-  width: 90%;
-  max-width: 400px;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: none;
-  background-color: #222;
-  color: #eee;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  transition: background-color 0.2s;
-}
-
-.add-session input:focus,
-.add-session textarea:focus {
-  background-color: #333;
-  outline: 2px solid #1db954;
-}
-
-.add-session button {
-  width: 50%;
-  max-width: 200px;
-  padding: 12px;
-  display: block;
-  margin: 0 auto;
-  background-color: #1db954;
-  color: #111;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.add-session button:hover {
-  background-color: #17a444;
-  transform: scale(1.05);
-}
-
-/* ---------------------- LISTA DE SESIONES ---------------------- */
-#sessions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-#sessions div {
-  background-color: #1a1a1a;
-  padding: 20px;
-  border-radius: 12px;
-  width: 300px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#sessions div:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-}
-
-#sessions h3 {
-  margin: 0 0 10px 0;
-  color: #1db954;
-  font-size: 1.2rem;
-}
-
-#sessions p {
-  margin: 5px 0;
-  color: #ccc;
-}
-
-#sessions a {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 12px;
-  background-color: #1db954;
-  color: #111;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 6px;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-#sessions a:hover {
-  background-color: #17a444;
-  transform: scale(1.05);
-}
-
-
-
-
-#add-session-container {
-  display: none;
-}
-
-
-.toast {
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  opacity: 0;
-  transform: translateX(100%);
-  transition: all 0.5s ease;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.about-section {
+/* --- ADMIN DASHBOARD STYLE --- */
+.admin-dashboard {
+  background: var(--panel-bg);
+  border: 1px solid #333;
+  border-radius: 4px;
   max-width: 800px;
   margin: 20px auto;
-  text-align: center;
-  padding: 20px;
-  border-radius: 12px;
-  color: #ffffff;
-  background: linear-gradient(135deg, #0a0a0a, #1b1b1b 50%, #0a0a0a); /* fondo oscuro degradado */
-  box-shadow: 0 8px 20px rgba(0, 255, 200, 0.3); /* resplandor sutil verde-azulado */
-  border: 1px solid #00ffe0; /* borde neón suave */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
-.about-section h2 {
-  color: #00ffe0; /* neón verde-azulado */
-  margin-bottom: 10px;
+.admin-status-bar {
+  background: #1a1a1a;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
 }
 
-.about-section p {
-  line-height: 1.6;
-  color: #c0fff7; /* texto claro para contraste */
-}
-
-/* ===================== SOBRE MÍ TRIKTOR ===================== */
-.about-section {
-  max-width: 800px;
-  margin: 30px auto;
-  text-align: center;
-  padding: 25px;
-  border-radius: 12px;
-  color: #c0fff7;
-  background: linear-gradient(135deg, #0a0a0a, #1b1b1b 50%, #0a0a0a);
-  border: 2px solid #00ffe0;
-  box-shadow: 0 0 20px rgba(0, 255, 224, 0.5);
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.5s ease-in-out;
-}
-
-/* Efecto de resplandor pulsante */
-.about-section::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0,255,224,0.15) 0%, transparent 70%);
-  animation: pulseGlow 3s infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { transform: scale(0.8); opacity: 0.3; }
-  50% { transform: scale(1.2); opacity: 0.6; }
-}
-
-.about-section h2 {
-  color: #00ffe0;
-  margin-bottom: 15px;
-  text-shadow: 0 0 8px #00ffe0;
-}
-
-.about-section p {
-  line-height: 1.6;
-  color: #c0fff7;
-  text-shadow: 0 0 4px #00ffe0;
-}
-
-#dj-photo {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 3px solid #00ffe0;
-  box-shadow: 0 0 15px rgba(0, 255, 224, 0.6);
-}
-
-/* ===================== TRIKTOR FULL STYLE ===================== */
-
-body {
-  background: #0b0f12;
-}
-
-/* Sección principal */
-.about-section {
-  position: relative;
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 40px;
-  border-radius: 15px;
-  text-align: center;
-  background: linear-gradient(135deg, #0f1418, #111c22 50%, #0f1418);
-  border: 2px solid #00ffe0;
-  overflow: hidden;
-  box-shadow: 0 0 25px rgba(0,255,224,0.4);
-}
-
-/* Glow animado estilo software DJ */
-.about-glow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0,255,224,0.15) 0%, transparent 60%);
-  animation: rotateGlow 8s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rotateGlow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Título */
-.about-section h2 {
-  color: #00ffe0;
-  font-size: 28px;
-  margin-bottom: 20px;
-  text-shadow: 0 0 10px #00ffe0;
-}
-
-/* Texto */
-.about-section p {
-  color: #c0fff7;
-  line-height: 1.7;
-  font-size: 16px;
-}
-
-/* Foto DJ */
-#dj-photo {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 0px;
-  border: 3px solid #00ffe0;
-  box-shadow: 0 0 20px rgba(0,255,224,0.6);
-}
-
-#dj-photo:hover {
-  text-shadow:
-    0 0 10px #00ffe0,
-    0 0 20px #00ffe0,
-    0 0 30px #00ffe0,
-    0 0 60px #00ffe0,
-    0 0 120px #00ffe0;
-  transform: scale(1.05);
-}
-
-/* Línea inferior tipo pista de energía */
-.about-section::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, transparent, #00ffe0, transparent);
-  animation: pulseLine 2s infinite;
-}
-
-@keyframes pulseLine {
-  0%,100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-
-/* ===================== FESTIVAL MODE ===================== */
-
-/* Fondo ambiente tipo club */
-.club-background {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at center, rgba(0,255,224,0.05), transparent 70%);
-  animation: clubPulse 6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes clubPulse {
-  0%,100% { transform: scale(1); opacity: 0.4; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-}
-
-
-.equalizer span {
-  width: 6px;
-  background: #00ffe0;
-  border-radius: 3px;
-  animation: bounce 1s infinite ease-in-out;
-}
-
-/* Animación diferente para cada barra */
-.equalizer span:nth-child(1) { animation-delay: 0s; }
-.equalizer span:nth-child(2) { animation-delay: 0.2s; }
-.equalizer span:nth-child(3) { animation-delay: 0.4s; }
-.equalizer span:nth-child(4) { animation-delay: 0.6s; }
-.equalizer span:nth-child(5) { animation-delay: 0.8s; }
-
-@keyframes bounce {
-  0%,100% { height: 10px; }
-  50% { height: 40px; }
-}
-
-/* Mejora visual general */
-.about-section {
-  position: relative;
-  z-index: 1;
-}
-
-.about-section h2 {
-  font-size: 30px;
-  letter-spacing: 2px;
-}
-
-.about-section p {
-  font-size: 17px;
-}
-
-/* Hover profesional */
-.about-section:hover {
-  box-shadow: 0 0 35px rgba(0,255,224,0.7);
-  transition: 0.4s ease;
-}
-
-/* ================= TRAKTOR BUTTON STYLE ================= */
-
-.traktor-btn {
-  background: linear-gradient(145deg, #111, #1a1a1a);
-  color: #00ffe0;
-  border: 1px solid #00ffe0;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+#admin-indicator {
+  color: var(--neon-cyan);
+  font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 1px;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 0 10px rgba(0,255,224,0.2);
+}
+
+#admin-indicator i { animation: blink 1.5s infinite; margin-right: 5px; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.admin-panel-module { padding: 25px; }
+.module-header { color: #555; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 20px; }
+
+.traktor-form .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+.traktor-form label { color: #666; font-size: 0.65rem; margin-bottom: 5px; font-weight: bold; }
+
+.traktor-form input, .traktor-form textarea {
+  background: #000;
+  border: 1px solid #222;
+  border-left: 3px solid #333;
+  color: var(--neon-cyan);
+  padding: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+.traktor-form input:focus { border-left-color: var(--neon-cyan); outline: none; }
+.input-row { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; }
+
+.traktor-btn-save {
+  width: 100%; background: transparent; color: var(--neon-cyan);
+  border: 1px solid var(--neon-cyan); padding: 15px; cursor: pointer;
+  font-weight: bold; transition: 0.3s;
+}
+.traktor-btn-save:hover { background: var(--neon-cyan); color: #000; }
+
+/* --- FILTROS --- */
+.filter-wrapper { max-width: 1200px; margin: 40px auto 20px; padding: 0 20px; }
+.filter-container { 
+  display: flex; gap: 15px; background: #111; padding: 15px; 
+  border-radius: 4px; border: 1px solid #222; 
+}
+.search-box { flex: 3; display: flex; align-items: center; }
+.filter-box { flex: 1; display: flex; align-items: center; }
+.filter-container i { color: var(--neon-cyan); margin: 0 10px; }
+.traktor-input { background: transparent; border: none; color: white; width: 100%; outline: none; }
+
+/* --- OTROS --- */
+.traktor-btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); cursor: pointer; padding: 5px 10px; font-size: 0.7rem; }
+.toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; border: 1px solid; background: #000; z-index: 999; }
+.sessions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+.session-card { background: #111; padding: 20px; border: 1px solid #222; transition: 0.3s; }
+.session-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); }
+
+/* --- RECUPERACIÓN DE FOTO Y NEÓN --- */
+.about-section {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px;
+    overflow: hidden;
+}
+
+#dj-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%; /* Foto redonda */
+    object-fit: cover;
+    border: 3px solid var(--neon-cyan);
+    box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.about-section h3 {
+    font-size: 2.5rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+    margin: 10px 0;
+}
+
+/* --- ICONOS DE CONTACTO --- */
+.social-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.social-item {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.social-item i {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.social-item:hover {
+    transform: translateY(-5px);
+    color: var(--neon-cyan);
+}
+
+/* --- BOTONES DE LAS SESIONES (EDIT/DEL) --- */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.traktor-btn {
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: 0.3s;
 }
 
 .traktor-btn:hover {
-  background: #00ffe0;
-  color: #000;
-  box-shadow: 0 0 20px rgba(0,255,224,0.8);
-  transform: scale(1.05);
+    background: var(--neon-cyan);
+    color: black;
 }
 
 .traktor-btn-danger {
-  border-color: #ff004c;
-  color: #ff004c;
+    border-color: var(--danger);
+    color: var(--danger);
 }
 
 .traktor-btn-danger:hover {
-  background: #ff004c;
-  color: white;
-  box-shadow: 0 0 20px rgba(255,0,76,0.8);
+    background: var(--danger);
+    color: white;
 }
 
-.traktor-btn-warning {
-  border-color: #ffaa00;
-  color: #ffaa00;
+/* --- EQUALIZADOR ANIMADO --- */
+.equalizer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 40px;
+    gap: 3px;
+    margin-bottom: 20px;
 }
 
-.traktor-btn-warning:hover {
-  background: #ffaa00;
-  color: black;
-  box-shadow: 0 0 20px rgba(255,170,0,0.8);
+.equalizer span {
+    width: 5px;
+    background: var(--neon-cyan);
+    animation: bounce 1s infinite alternate;
 }
 
-
-
-
-
-/* ===================== EFECTO NOMBRE DJ ===================== */
-#about h3 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
-  color: #00ffe0; /* color principal del neón */
-  text-shadow: 
-    0 0 5px #00ffe0,
-    0 0 10px #00ffe0,
-    0 0 20px #00ffe0,
-    0 0 40px #00ffe0,
-    0 0 80px #00ffe0;
-  margin-bottom: 5px;
-  transition: all 0.3s ease-in-out;
+@keyframes bounce {
+    from { height: 5px; }
+    to { height: 40px; }
 }
 
-#about h3:hover {
-  text-shadow:
-    0 0 10px #00ffe0,
-    0 0 20px #00ffe0,
-    0 0 30px #00ffe0,
-    0 0 60px #00ffe0,
-    0 0 120px #00ffe0;
-  transform: scale(1.05);
-}
+/* Retrasos para las barras del ecualizador */
+.equalizer span:nth-child(2) { animation-delay: 0.2s; }
+.equalizer span:nth-child(3) { animation-delay: 0.4s; }
+.equalizer span:nth-child(4) { animation-delay: 0.1s; }
+.equalizer span:nth-child(5) { animation-delay: 0.3s; }

@@ -2,71 +2,105 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>DJ Portfolio</title>
+  <title>Javilindj | Admin Console</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="images/audio.png" type="image/png">
 </head>
 <body>
- <div id="about" class="about-section">
-  <div class="club-background"></div>
-  <div class="about-glow"></div>
-
-  <div class="equalizer">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+  <div id="about" class="about-section">
+    <div class="club-background"></div>
+    <div class="about-glow"></div>
+    <div class="equalizer">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <img src="images/dj-photo.jpg" alt="Javilindj" id="dj-photo">
+    <h3>Javilindj</h3>
+    <p>Hardcore, Jumpstyle & Newstyle Specialist</p>
   </div>
 
-  <img src="images/dj-photo.jpg" alt="DJ" id="dj-photo">
-
-  <h3>Javilindj</h3>
-
-  <p>
-    ¡Hola! Soy <strong>Javilindj</strong>, DJ especializado en música 
-    <strong>hardcore, jumpstyle y newstyle</strong>. Comencé mi aventura musical en 2003 
-    con solo 2 platos y una colección de vinilos. Tras un breve descanso, volví 
-    explorando diferentes controladoras y sistemas hasta encontrar mi pasión en 
-    <strong>Traktor</strong>, su sistema y equipos.
-    A continuación, te presento mis sesiones y algunos mashups para que los escuches 
-    y disfrutes. También puedes buscarme en redes sociales y contratarme para tu evento.
-  </p>
-</div>
-
-  <!-- LOGIN / INDICADOR / LOGOUT -->
-  <section id="login-section" class="login-section">
+  <section id="admin-zone" class="admin-section">
     <form id="login-form">
       <input type="text" id="username" placeholder="Usuario" required>
       <input type="password" id="password" placeholder="Contraseña" required>
-      <button type="submit">Entrar</button>
+      <button type="submit" class="traktor-btn">ACCEDER</button>
     </form>
-    <div id="admin-indicator" style="display:none; margin-top:10px; font-weight:bold;"></div>
-    <button id="logout-btn" style="display:none; margin-top:10px;">Cerrar sesión</button>
+    
+    <div id="admin-controls" style="display:none;">
+      <div class="admin-dashboard">
+        <div class="admin-status-bar">
+          <span id="admin-indicator"><i class="fas fa-circle"></i> MODO DJ ACTIVO</span>
+          <button id="logout-btn" class="traktor-btn-danger">SALIR</button>
+        </div>
+
+        <div class="admin-panel-module">
+          <div class="module-header"><i class="fas fa-sliders-h"></i> GESTIONAR LIBRERÍA</div>
+          <form id="session-form" class="traktor-form">
+            <div class="input-group">
+              <label>TÍTULO DE LA SESIÓN</label>
+              <input type="text" id="title" placeholder="Ej: Hardcore Session Vol.1" required>
+            </div>
+            
+            <div class="input-row">
+              <div class="input-group">
+                <label>AÑO</label>
+                <input type="number" id="year" placeholder="2024" required>
+              </div>
+              <div class="input-group">
+                <label>URL DESCARGA</label>
+                <input type="url" id="downloadUrl" placeholder="https://..." required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label>DESCRIPCIÓN / TRACKLIST</label>
+              <textarea id="description" rows="3" placeholder="Detalles de la sesión..."></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn" class="traktor-btn-save">
+              <i class="fas fa-save"></i> GUARDAR EN LIBRERÍA
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- FORMULARIO AÑADIR SESIÓN -->
-  <div class="add-session" style="display: none;">
-    <h2>Añadir nueva sesión</h2>
-    <form id="session-form">
-      <input type="text" id="title" placeholder="Título" required><br><br>
-      <textarea id="description" placeholder="Descripción"></textarea><br><br>
-      <input type="number" id="year" placeholder="Año" required><br><br>
-      <input type="url" id="downloadUrl" placeholder="Link de descarga" required><br><br>
-      <button type="submit" class="traktor-btn">Añadir sesión</button>
-    </form>
+  <div class="filter-wrapper">
+    <div class="filter-container">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="Buscar en la maleta..." class="traktor-input">
+      </div>
+      <div class="filter-box">
+        <i class="fas fa-calendar-alt"></i>
+        <select id="year-filter" class="traktor-input">
+          <option value="all">Todos los años</option>
+        </select>
+      </div>
+    </div>
   </div>
 
-  <!-- LISTA DE SESIONES -->
-  <div id="sessions"></div>
+  <div id="sessions" class="sessions-grid"></div>
 
-  <!-- Contenedor de mensajes flotantes -->
-<div id="toast-container" style="
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-"></div>
+  <div id="toast-container"></div>
 
+  <section id="contact" class="contact-section">
+    <div class="social-container">
+        <a href="https://instagram.com/javilindj" target="_blank" class="social-item">
+            <i class="fab fa-instagram"></i>
+            <span>Instagram</span>
+        </a>
+        <a href="mailto:javigallegofenor@gmail.com" class="social-item">
+            <i class="far fa-envelope"></i>
+            <span>Email</span>
+        </a>
+        <a href="#" target="_blank" class="social-item">
+            <i class="fab fa-soundcloud"></i>
+            <span>Soundcloud</span>
+        </a>
+    </div>
+</section>
 
   <script src="js/main.js"></script>
 </body>

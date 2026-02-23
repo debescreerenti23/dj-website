@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Javilindj | Admin Console</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -37,23 +38,23 @@
           <div class="module-header"><i class="fas fa-sliders-h"></i> GESTIONAR LIBRERÍA</div>
           <form id="session-form" class="traktor-form">
             <div class="input-group">
-              <label>TÍTULO DE LA SESIÓN</label>
+              <label for="title">TÍTULO DE LA SESIÓN</label>
               <input type="text" id="title" placeholder="Ej: Hardcore Session Vol.1" required>
             </div>
             
             <div class="input-row">
               <div class="input-group">
-                <label>AÑO</label>
-                <input type="number" id="year" placeholder="2024" required>
+                <label for="year">AÑO</label>
+                <input type="text" id="year" placeholder="2024" required>
               </div>
               <div class="input-group">
-                <label>URL DESCARGA</label>
+                <label for="downloadUrl">URL DESCARGA</label>
                 <input type="url" id="downloadUrl" placeholder="https://..." required>
               </div>
             </div>
 
             <div class="input-group">
-              <label>DESCRIPCIÓN / TRACKLIST</label>
+              <label for="description">DESCRIPCIÓN / TRACKLIST</label>
               <textarea id="description" rows="3" placeholder="Detalles de la sesión..."></textarea>
             </div>
 
@@ -87,7 +88,7 @@
 
   <section id="contact" class="contact-section">
     <div class="social-container">
-        <a href="https://instagram.com/javilindj" target="_blank" class="social-item">
+        <a href="https://instagram.com/javilindj" target="_blank" class="social-item" rel="noopener">
             <i class="fab fa-instagram"></i>
             <span>Instagram</span>
         </a>
@@ -95,13 +96,11 @@
             <i class="far fa-envelope"></i>
             <span>Email</span>
         </a>
-        <a href="#" target="_blank" class="social-item">
+        <a href="#" target="_blank" class="social-item" rel="noopener">
             <i class="fab fa-soundcloud"></i>
             <span>Soundcloud</span>
         </a>
     </div>
-</section>
-
-  <script src="js/main.js"></script>
+  </section> <script src="js/main.js"></script>
 </body>
 </html>

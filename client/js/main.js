@@ -188,5 +188,18 @@ logoutBtn.addEventListener("click", () => {
 searchInput.addEventListener("input", filterSessions);
 yearFilter.addEventListener("change", filterSessions);
 
+let clickCount = 0;
+const adminFormContainer = document.getElementById("admin-form-container");
+
+const djPhoto = document.getElementById("dj-photo");
+
+djPhoto.addEventListener("click", () => {
+    clickCount++;
+    if(clickCount === 7) {
+        adminFormContainer.style.display = "block"
+    }
+});
+
+
 updateAdminUI();
 loadSessions();

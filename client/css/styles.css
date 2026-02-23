@@ -246,3 +246,7 @@ body {
   .admin-dashboard { margin: 10px; }
   .social-container { gap: 20px; }
 }
+
+#admin-form-container {
+    display: none;
+}

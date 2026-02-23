@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://dj-website-bkfj.onrender.com";
 
 // ELEMENTOS DOM
 const loginForm = document.getElementById("login-form");

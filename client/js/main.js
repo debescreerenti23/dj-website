@@ -123,29 +123,43 @@ function prepareEdit(id, title, desc, year, url) {
 sessionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("adminToken");
+
+    // Construimos el objeto EXACTAMENTE como lo espera el servidor
     const data = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
-        year: document.getElementById("year").value,
+        year: document.getElementById("year").value.toString(), // Forzamos a texto por si acaso
         downloadUrl: document.getElementById("downloadUrl").value
     };
+
+    console.log("Enviando estos datos:", data); // Esto te servirá para ver qué falla
 
     const method = editingSessionId ? "PUT" : "POST";
     const url = editingSessionId ? `${API_URL}/sessions/${editingSessionId}` : `${API_URL}/sessions`;
 
-    const res = await fetch(url, {
-        method: method,
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify(data)
-    });
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: { 
+                "Content-Type": "application/json", 
+                "Authorization": `Bearer ${token}` 
+            },
+            body: JSON.stringify(data)
+        });
 
-    if (res.ok) {
-        showToast(editingSessionId ? "Actualizado" : "Guardado");
-        editingSessionId = null;
-        sessionForm.reset();
-        submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
-        submitBtn.style = ""; 
-        loadSessions();
+        if (res.ok) {
+            showToast(editingSessionId ? "¡Sesión actualizada!" : "¡Sesión guardada!");
+            editingSessionId = null;
+            sessionForm.reset();
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
+            loadSessions();
+        } else {
+            const errorData = await res.json();
+            console.error("Error del servidor:", errorData);
+            showToast("Error al guardar: " + (errorData.message || "Revisa los campos"), "#ff004c");
+        }
+    } catch (err) {
+        console.error("Error en la petición:", err);
     }
 });
 

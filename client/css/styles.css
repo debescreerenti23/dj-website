@@ -1,19 +1,64 @@
 :root {
   --neon-cyan: #00ffe0;
-  --dark-bg: #0a0a0a;
+  --dark-bg: #000000;
   --panel-bg: #141414;
   --danger: #ff004c;
   --warning: #ffaa00;
+  --card-bg: #111111;
 }
 
 body {
-  background-color: #000;
+  background-color: var(--dark-bg);
   color: white;
   font-family: 'Inter', sans-serif;
   margin: 0;
+  overflow-x: hidden; /* Evita scroll lateral en móviles */
 }
 
-/* --- ADMIN DASHBOARD STYLE --- */
+/* --- SECCIÓN ABOUT & DJ PHOTO --- */
+.about-section {
+  padding: 60px 20px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to bottom, #0a0a0a, #000);
+}
+
+#dj-photo {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  border: 3px solid var(--neon-cyan);
+  box-shadow: 0 0 25px rgba(0, 255, 224, 0.4);
+  transition: 0.5s;
+}
+
+#dj-photo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(0, 255, 224, 0.6);
+}
+
+.about-section h3 {
+  font-size: 2.5rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+  margin: 20px 0 5px;
+  letter-spacing: 2px;
+}
+
+.about-section p {
+  color: #888;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- ADMIN DASHBOARD --- */
 .admin-dashboard {
   background: var(--panel-bg);
   border: 1px solid #333;
@@ -28,6 +73,7 @@ body {
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid #333;
 }
 
@@ -42,7 +88,7 @@ body {
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .admin-panel-module { padding: 25px; }
-.module-header { color: #555; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 20px; }
+.module-header { color: #555; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
 
 .traktor-form .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
 .traktor-form label { color: #666; font-size: 0.65rem; margin-bottom: 5px; font-weight: bold; }
@@ -54,173 +100,149 @@ body {
   color: var(--neon-cyan);
   padding: 12px;
   font-family: 'Courier New', monospace;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.traktor-form input:focus { border-left-color: var(--neon-cyan); outline: none; }
-.input-row { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; }
+.traktor-form input:focus { border-left-color: var(--neon-cyan); outline: none; background: #050505; }
+
+.input-row { 
+  display: grid; 
+  grid-template-columns: 1fr 2fr; 
+  gap: 15px; 
+}
 
 .traktor-btn-save {
   width: 100%; background: transparent; color: var(--neon-cyan);
   border: 1px solid var(--neon-cyan); padding: 15px; cursor: pointer;
-  font-weight: bold; transition: 0.3s;
+  font-weight: bold; transition: 0.3s; margin-top: 10px;
 }
 .traktor-btn-save:hover { background: var(--neon-cyan); color: #000; }
 
-/* --- FILTROS --- */
+/* --- FILTROS (CORREGIDO) --- */
 .filter-wrapper { max-width: 1200px; margin: 40px auto 20px; padding: 0 20px; }
+
 .filter-container { 
-  display: flex; gap: 15px; background: #111; padding: 15px; 
-  border-radius: 4px; border: 1px solid #222; 
-}
-.search-box { flex: 3; display: flex; align-items: center; }
-.filter-box { flex: 1; display: flex; align-items: center; }
-.filter-container i { color: var(--neon-cyan); margin: 0 10px; }
-.traktor-input { background: transparent; border: none; color: white; width: 100%; outline: none; }
-
-/* --- OTROS --- */
-.traktor-btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); cursor: pointer; padding: 5px 10px; font-size: 0.7rem; }
-.toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; border: 1px solid; background: #000; z-index: 999; }
-.sessions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
-.session-card { background: #111; padding: 20px; border: 1px solid #222; transition: 0.3s; }
-.session-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); }
-
-/* --- RECUPERACIÓN DE FOTO Y NEÓN --- */
-.about-section {
-    padding: 40px 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex; 
+  gap: 15px; 
+  background: #111; 
+  padding: 15px; 
+  border-radius: 4px; 
+  border: 1px solid #222; 
+  flex-wrap: wrap; /* Evita que se corten en pantallas medianas */
+  align-items: center;
 }
 
-#dj-photo {
-    width: 100%;
-    max-width: 250px; /* Tamaño máximo en PC */
-    height: auto;
-    border-radius: 50%; /* Si la quieres circular */
-    object-fit: cover;
-    margin: 0 auto;
-    display: block;
-    border: 3px solid #00ffe0;
-    box-shadow: 0 0 20px rgba(0, 255, 224, 0.5);
+.search-box { 
+  flex: 3; 
+  display: flex; 
+  align-items: center; 
+  min-width: 200px; 
 }
 
-.about-section h3 {
-    font-size: 2.5rem;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px var(--neon-cyan);
-    margin: 10px 0;
+.filter-box { 
+  flex: 1; 
+  display: flex; 
+  align-items: center; 
+  min-width: 150px; 
 }
 
-/* --- ICONOS DE CONTACTO --- */
-.social-container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 20px;
+.filter-container i { color: var(--neon-cyan); margin-right: 10px; }
+
+.traktor-input { 
+  background: transparent; 
+  border: none; 
+  color: white; 
+  width: 100%; 
+  outline: none; 
+  font-size: 0.9rem;
 }
 
-.social-item {
-    text-decoration: none;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: 0.3s;
+/* --- GRID DE SESIONES --- */
+.sessions-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  gap: 25px; 
+  padding: 20px; 
+  max-width: 1200px; 
+  margin: 0 auto; 
 }
 
-.social-item i {
-    font-size: 2rem;
-    margin-bottom: 8px;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 5px var(--neon-cyan);
+.session-card { 
+  background: var(--card-bg); 
+  padding: 25px; 
+  border: 1px solid #222; 
+  border-top: 2px solid #333;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
-.social-item:hover {
-    transform: translateY(-5px);
-    color: var(--neon-cyan);
+.session-card:hover { 
+  border-color: var(--neon-cyan); 
+  transform: translateY(-8px); 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
 }
 
-/* --- BOTONES DE LAS SESIONES (EDIT/DEL) --- */
-.card-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
+.session-card h3 { margin: 0 0 10px; font-size: 1.2rem; }
+.session-card h3 span { color: var(--neon-cyan); font-size: 0.9rem; margin-left: 5px; }
+.session-card p { color: #aaa; font-size: 0.85rem; line-height: 1.5; margin-bottom: 15px; }
+
+/* --- BOTONES --- */
+.card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .traktor-btn {
-    background: transparent;
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-    padding: 8px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    transition: 0.3s;
+  background: transparent; border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan); padding: 10px 20px; cursor: pointer;
+  font-weight: bold; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s;
 }
 
-.traktor-btn:hover {
-    background: var(--neon-cyan);
-    color: black;
-}
+.traktor-btn:hover { background: var(--neon-cyan); color: black; }
 
 .traktor-btn-danger {
-    border-color: var(--danger);
-    color: var(--danger);
+  background: transparent; border: 1px solid var(--danger);
+  color: var(--danger); cursor: pointer; padding: 10px 20px;
+  font-weight: bold; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s;
 }
 
-.traktor-btn-danger:hover {
-    background: var(--danger);
-    color: white;
-}
+.traktor-btn-danger:hover { background: var(--danger); color: white; }
 
-/* --- EQUALIZADOR ANIMADO --- */
+/* --- EQUALIZADOR --- */
 .equalizer {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 40px;
-    gap: 3px;
-    margin-bottom: 20px;
+  display: flex; justify-content: center; align-items: flex-end;
+  height: 30px; gap: 4px; margin-bottom: 15px;
 }
 
 .equalizer span {
-    width: 5px;
-    background: var(--neon-cyan);
-    animation: bounce 1s infinite alternate;
+  width: 4px; background: var(--neon-cyan);
+  animation: bounce 0.8s infinite alternate cubic-bezier(0.5, 0, 0.5, 1);
 }
 
-@keyframes bounce {
-    from { height: 5px; }
-    to { height: 40px; }
-}
+@keyframes bounce { from { height: 4px; } to { height: 30px; } }
+.equalizer span:nth-child(2) { animation-delay: 0.1s; }
+.equalizer span:nth-child(3) { animation-delay: 0.2s; }
+.equalizer span:nth-child(4) { animation-delay: 0.3s; }
+.equalizer span:nth-child(5) { animation-delay: 0.4s; }
 
-/* Retrasos para las barras del ecualizador */
-.equalizer span:nth-child(2) { animation-delay: 0.2s; }
-.equalizer span:nth-child(3) { animation-delay: 0.4s; }
-.equalizer span:nth-child(4) { animation-delay: 0.1s; }
-.equalizer span:nth-child(5) { animation-delay: 0.3s; }
+/* --- CONTACTO --- */
+.contact-section { padding: 60px 20px; background: #050505; border-top: 1px solid #111; }
+.social-container { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.social-item { text-decoration: none; color: #888; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+.social-item i { font-size: 1.8rem; margin-bottom: 10px; color: var(--neon-cyan); }
+.social-item:hover { color: white; transform: translateY(-5px); }
 
+/* --- TOAST --- */
+.toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; border: 1px solid; background: #000; z-index: 999; font-size: 0.85rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+/* --- RESPONSIVE ADAPTATIONS --- */
 @media (max-width: 768px) {
-    /* Hacemos la foto más pequeña en móviles */
-    #dj-photo {
-        max-width: 150px; 
-    }
-
-    /* Ajustamos los textos para que no se vean gigantes */
-    .about-section h3 {
-        font-size: 1.8rem;
-    }
-
-    /* Hacemos que la cuadrícula de sesiones pase a ser de 1 sola columna */
-    .sessions-grid {
-        grid-template-columns: 1fr;
-        padding: 10px;
-    }
-
-    /* Los botones del formulario de admin suelen necesitar más espacio */
-    .input-row {
-        flex-direction: column;
-    }
+  #dj-photo { max-width: 160px; }
+  .about-section h3 { font-size: 1.8rem; }
+  
+  .filter-container { flex-direction: column; align-items: stretch; gap: 10px; }
+  .search-box, .filter-box { width: 100%; }
+  
+  .input-row { grid-template-columns: 1fr; }
+  .sessions-grid { grid-template-columns: 1fr; padding: 15px; }
+  
+  .admin-dashboard { margin: 10px; }
+  .social-container { gap: 20px; }
 }

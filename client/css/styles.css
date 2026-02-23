@@ -86,22 +86,23 @@ body {
 
 /* --- RECUPERACIÓN DE FOTO Y NEÓN --- */
 .about-section {
-    position: relative;
+    padding: 40px 20px;
     text-align: center;
-    padding: 60px 20px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #dj-photo {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%; /* Foto redonda */
+    width: 100%;
+    max-width: 250px; /* Tamaño máximo en PC */
+    height: auto;
+    border-radius: 50%; /* Si la quieres circular */
     object-fit: cover;
-    border: 3px solid var(--neon-cyan);
-    box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
+    margin: 0 auto;
+    display: block;
+    border: 3px solid #00ffe0;
+    box-shadow: 0 0 20px rgba(0, 255, 224, 0.5);
 }
 
 .about-section h3 {
@@ -200,3 +201,26 @@ body {
 .equalizer span:nth-child(3) { animation-delay: 0.4s; }
 .equalizer span:nth-child(4) { animation-delay: 0.1s; }
 .equalizer span:nth-child(5) { animation-delay: 0.3s; }
+
+@media (max-width: 768px) {
+    /* Hacemos la foto más pequeña en móviles */
+    #dj-photo {
+        max-width: 150px; 
+    }
+
+    /* Ajustamos los textos para que no se vean gigantes */
+    .about-section h3 {
+        font-size: 1.8rem;
+    }
+
+    /* Hacemos que la cuadrícula de sesiones pase a ser de 1 sola columna */
+    .sessions-grid {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    /* Los botones del formulario de admin suelen necesitar más espacio */
+    .input-row {
+        flex-direction: column;
+    }
+}

@@ -72,6 +72,9 @@ async function loadSessions() {
             const card = document.createElement("div");
             card.className = "session-card";
             card.innerHTML = `
+                <div class="cover-wrapper">
+                    <img src="${s.coverUrl}" alt="${s.title}" class="session-cover">
+                </div>
                 <h3>${s.title} <span>(${s.year})</span></h3>
                 <p>${s.description}</p>
                 <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
@@ -129,7 +132,8 @@ sessionForm.addEventListener("submit", async (e) => {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
         year: document.getElementById("year").value.toString(), // Forzamos a texto por si acaso
-        downloadUrl: document.getElementById("downloadUrl").value
+        downloadUrl: document.getElementById("downloadUrl").value,
+        coverUrl: document.getElementById("coverUrl").value
     };
 
     console.log("Enviando estos datos:", data); // Esto te servirá para ver qué falla

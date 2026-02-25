@@ -250,3 +250,28 @@ body {
 #admin-form-container {
     display: none;
 }
+
+.session-card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px #00ffe055;
+}
+
+.cover-wrapper {
+    margin-bottom: 10px;
+}
+
+.session-cover {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}

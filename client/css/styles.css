@@ -198,9 +198,17 @@ body {
 .traktor-btn:hover { background: var(--neon-cyan); color: black; }
 
 .traktor-btn-danger {
-  background: transparent; border: 1px solid var(--danger);
-  color: var(--danger); cursor: pointer; padding: 10px 20px;
-  font-weight: bold; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s;
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  cursor: pointer;
+  padding: 10px 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  transition: 0.3s;
+  border-radius: 5px;
+  
 }
 
 .traktor-btn-danger:hover { background: var(--danger); color: white; }
@@ -264,7 +272,7 @@ body {
 .session-card {
     background: #222;
     border: 1px solid #111;
-    padding: 2px;
+    padding: 10px;
     border-radius: 12px;
     text-align: center;
     transition: 0.3s;

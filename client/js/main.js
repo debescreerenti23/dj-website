@@ -73,7 +73,7 @@ async function loadSessions() {
             card.className = "session-card";
             card.innerHTML = `
                 <div class="cover-wrapper">
-                    <img src="${s.coverUrl}" alt="${s.title}" class="session-cover">
+                    <img src="${API_URL}${s.coverUrl}" alt="${s.title}" class="session-cover">
                 </div>
                 <h3>${s.title} <span>(${s.year})</span></h3>
                 <p>${s.description}</p>

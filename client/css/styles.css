@@ -262,8 +262,8 @@ body {
 }
 
 .session-card {
-    background: #111;
-    border: 1px solid #222;
+    background: #222;
+    border: 1px solid #111;
     padding: 25px;
     border-radius: 12px;
     text-align: center;

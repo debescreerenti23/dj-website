@@ -207,7 +207,6 @@ body {
   text-transform: uppercase;
   font-size: 0.75rem;
   transition: 0.3s;
-  border-radius: 5px;
   
 }
 
@@ -270,7 +269,7 @@ body {
 }
 
 .session-card {
-    background: #222;
+    background: transparent;
     border: 1px solid #111;
     padding: 10px;
     border-radius: 12px;

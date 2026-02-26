@@ -1,6 +1,5 @@
 const API_URL = "https://dj-website-bkfj.onrender.com";
 
-// ELEMENTOS DOM
 const loginForm = document.getElementById("login-form");
 const sessionForm = document.getElementById("session-form");
 const sessionsContainer = document.getElementById("sessions");
@@ -38,9 +37,7 @@ function filterSessions() {
     cards.forEach(card => {
         const title = card.querySelector("h3").textContent.toLowerCase();
         const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
-        const matchSearch = title.includes(term);
-        const matchYear = year === "all" || cardYear === year;
-        card.style.display = (matchSearch && matchYear) ? "flex" : "none";
+        card.style.display = (title.includes(term) && (year === "all" || cardYear === year)) ? "flex" : "none";
     });
 }
 
@@ -69,17 +66,18 @@ async function loadSessions() {
             const card = document.createElement("div");
             card.className = "session-card";
             
+            // LÓGICA DE RUTA ABSOLUTA
             let imgPath = 'images/audio.png'; 
-            if (s.coverUrl) {
+            if (s.coverUrl && s.coverUrl.trim() !== "") {
                 const rawPath = s.coverUrl.trim();
                 if (rawPath.startsWith('http')) {
                     imgPath = rawPath;
                 } else {
+                    // Forzamos que empiece por / para que sea una ruta raíz
                     imgPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
                 }
             }
 
-            // IMPORTANTE: Escapamos las comillas de la descripción para evitar errores en el onclick
             const safeDesc = s.description ? s.description.replace(/'/g, "\\'") : "";
             const safeTitle = s.title ? s.title.replace(/'/g, "\\'") : "";
             const safeCover = s.coverUrl ? s.coverUrl.replace(/'/g, "\\'") : "";
@@ -130,8 +128,7 @@ function prepareEdit(id, title, desc, year, url, cover) {
     document.getElementById("description").value = desc || "";
     document.getElementById("year").value = year || "";
     document.getElementById("downloadUrl").value = url || "";
-    
-    // CORRECCIÓN: Si cover es 'undefined' o nulo, ponemos cadena vacía
+    // Limpiamos el valor de cover si viene como undefined string
     document.getElementById("coverUrl").value = (cover === "undefined" || !cover) ? "" : cover;
     
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
@@ -155,13 +152,9 @@ sessionForm.addEventListener("submit", async (e) => {
     try {
         const res = await fetch(url, {
             method: method,
-            headers: { 
-                "Content-Type": "application/json", 
-                "Authorization": `Bearer ${token}` 
-            },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify(data)
         });
-
         if (res.ok) {
             showToast(editingSessionId ? "¡Actualizada!" : "¡Guardada!");
             editingSessionId = null;

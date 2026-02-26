@@ -285,7 +285,7 @@ body {
     height: 110px;
     overflow: hidden;
     border-radius: 50%;  
-    border: none !important; /* Fuerza la eliminación de cualquier borde */
+    border: none !important; 
     background: transparent !important;
     display: flex;
     align-items: center;
@@ -311,6 +311,7 @@ body {
     font-size: 0.85rem;
     color: #aaa;
     margin-bottom: 10px;
+    line-height: 1.4;
 }
 
 @media (max-width: 768px) {

@@ -105,10 +105,10 @@ async function loadSessions() {
                     <p>${s.description || ''}</p>
                     <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
                     <div class="card-actions">
-                        <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DOWNLOAD</button>
+                        <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DESCARGA</button>
                         ${token ? `
-                            <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${safeTitle}', '${safeDesc}', '${s.year}', '${s.downloadUrl}', '${safeCover}')">EDIT</button>
-                            <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">DEL</button>
+                            <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${safeTitle}', '${safeDesc}', '${s.year}', '${s.downloadUrl}', '${safeCover}')">EDITAR</button>
+                            <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">BORRAR</button>
                         ` : ''}
                     </div>
                 </div>

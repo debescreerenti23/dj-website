@@ -18,9 +18,7 @@ let clickCount = 0;
 function updateAdminUI() {
     const token = localStorage.getItem("adminToken");
     document.getElementById("admin-controls").style.display = token ? "block" : "none";
-    if (token) {
-        adminFormContainer.style.display = "none";
-    }
+    if (token) adminFormContainer.style.display = "none";
 }
 
 function showToast(message, color = "#00ffe0") {
@@ -75,14 +73,14 @@ async function loadSessions() {
             const card = document.createElement("div");
             card.className = "session-card";
             
-            // LÓGICA DE RUTA DE IMAGEN CORREGIDA
-            let imgPath = 'images/audio.png'; // Fallback
+            // LÓGICA DE RUTA: Si no hay ruta, usa el icono por defecto.
+            // Si hay ruta, fuerza que empiece por / para evitar errores de carpeta.
+            let imgPath = 'images/audio.png'; 
             if (s.coverUrl) {
                 const rawPath = s.coverUrl.trim();
                 if (rawPath.startsWith('http')) {
                     imgPath = rawPath;
                 } else {
-                    // Aseguramos que empiece por / para que no sea relativa a la URL actual
                     imgPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
                 }
             }
@@ -119,7 +117,7 @@ async function handleDownload(id, url) {
 
 // --- CRUD ---
 async function deleteSession(id) {
-    if (!confirm("¿Eliminar sesión de la maleta?")) return;
+    if (!confirm("¿Eliminar sesión?")) return;
     const token = localStorage.getItem("adminToken");
     const res = await fetch(`${API_URL}/sessions/${id}`, {
         method: "DELETE",
@@ -137,15 +135,12 @@ function prepareEdit(id, title, desc, year, url, cover) {
     document.getElementById("coverUrl").value = cover || "";
     
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
-    submitBtn.style.color = "#ffaa00";
-    submitBtn.style.borderColor = "#ffaa00";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 sessionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("adminToken");
-
     const data = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
@@ -168,20 +163,16 @@ sessionForm.addEventListener("submit", async (e) => {
         });
 
         if (res.ok) {
-            showToast(editingSessionId ? "¡Sesión actualizada!" : "¡Sesión guardada!");
+            showToast(editingSessionId ? "¡Actualizada!" : "¡Guardada!");
             editingSessionId = null;
             sessionForm.reset();
             submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
-            submitBtn.style.color = "var(--neon-cyan)";
-            submitBtn.style.borderColor = "var(--neon-cyan)";
             loadSessions();
         }
-    } catch (err) {
-        console.error("Error en la petición:", err);
-    }
+    } catch (err) { console.error(err); }
 });
 
-// --- AUTH ---
+// --- AUTH & EVENTOS ---
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const res = await fetch(`${API_URL}/login`, {
@@ -197,9 +188,7 @@ loginForm.addEventListener("submit", async (e) => {
         localStorage.setItem("adminToken", data.token); 
         updateAdminUI(); 
         loadSessions(); 
-    } else {
-        showToast("Error de acceso", "#ff004c");
-    }
+    } else showToast("Error de acceso", "#ff004c");
 });
 
 logoutBtn.addEventListener("click", () => {
@@ -208,7 +197,6 @@ logoutBtn.addEventListener("click", () => {
     loadSessions();
 });
 
-// --- EVENTOS ---
 searchInput.addEventListener("input", filterSessions);
 yearFilter.addEventListener("change", filterSessions);
 
@@ -217,7 +205,7 @@ djPhoto.addEventListener("click", () => {
     if(clickCount === 7) {
         adminFormContainer.style.display = "block";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        clickCount = 0; // Reset para seguridad
+        clickCount = 0;
     }
 });
 

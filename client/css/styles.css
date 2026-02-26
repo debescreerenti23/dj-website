@@ -251,17 +251,26 @@ body {
     display: none;
 }
 
-/* --- ESTILO DE LAS TARJETAS Y CARÁTULAS (REDONDAS) --- */
+/* --- ESTILO DE LAS TARJETAS Y CARÁTULAS REDONDAS --- */
+.sessions-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 25px; 
+    padding: 20px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
 .session-card {
     background: #111;
     border: 1px solid #222;
-    padding: 20px;
+    padding: 25px;
     border-radius: 12px;
     text-align: center;
     transition: 0.3s;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra todo el contenido */
+    align-items: center; /* Centra la carátula y el texto */
 }
 
 .session-card:hover {
@@ -272,26 +281,22 @@ body {
 
 .cover-wrapper {
     margin: 0 auto 15px auto;
-    width: 110px;        /* Tamaño de la esfera */
-    height: 110px;       /* Tamaño de la esfera */
+    width: 100px;        /* Tamaño pequeño y elegante */
+    height: 100px;
     overflow: hidden;
-    border-radius: 50%;
-    border: none;
-    background-color: #222; /* Fondo oscuro por si la imagen tarda en cargar */
+    border-radius: 50%;  /* Círculo perfecto */
+    border: none;        /* ELIMINA CUALQUIER BORDE GRIS */
+    background: #000;    /* Fondo negro base */
     display: flex;
     align-items: center;
-    justify-content: center;/* Sombra suave para dar profundidad */
+    justify-content: center;
 }
 
 .session-cover {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover;   /* Ajusta la foto al círculo */
     display: block;
-}
-
-.session-content {
-    width: 100%;
 }
 
 .session-content h3 {
@@ -300,9 +305,15 @@ body {
     color: var(--neon-cyan);
 }
 
+.session-content p {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
     .cover-wrapper {
-        width: 100px; /* Un poco más pequeña en móvil */
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
 }

@@ -272,12 +272,15 @@ body {
 
 .cover-wrapper {
     margin: 0 auto 15px auto;
-    width: 120px; /* Tamaño más pequeño y fijo */
-    height: 120px; /* Altura fija para asegurar el círculo */
+    width: 110px;        /* Tamaño de la esfera */
+    height: 110px;       /* Tamaño de la esfera */
     overflow: hidden;
-    border-radius: 50%; /* Hace la carátula redonda */
-    border: none; /* Eliminamos el borde gris */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Sombra suave para dar profundidad */
+    border-radius: 50%;
+    border: none;
+    background-color: #222; /* Fondo oscuro por si la imagen tarda en cargar */
+    display: flex;
+    align-items: center;
+    justify-content: center;/* Sombra suave para dar profundidad */
 }
 
 .session-cover {

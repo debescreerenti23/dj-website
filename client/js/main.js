@@ -1,5 +1,6 @@
 const API_URL = "https://dj-website-bkfj.onrender.com";
 
+// ELEMENTOS DOM
 const loginForm = document.getElementById("login-form");
 const sessionForm = document.getElementById("session-form");
 const sessionsContainer = document.getElementById("sessions");
@@ -17,7 +18,6 @@ let clickCount = 0;
 function updateAdminUI() {
     const token = localStorage.getItem("adminToken");
     document.getElementById("admin-controls").style.display = token ? "block" : "none";
-    // El contenedor del formulario de login solo se ve tras los 7 clics si no hay token
     if (token) {
         adminFormContainer.style.display = "none";
     }
@@ -45,7 +45,7 @@ function filterSessions() {
         const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
         const matchSearch = title.includes(term);
         const matchYear = year === "all" || cardYear === year;
-        card.style.display = (matchSearch && matchYear) ? "block" : "none";
+        card.style.display = (matchSearch && matchYear) ? "flex" : "none";
     });
 }
 
@@ -75,9 +75,17 @@ async function loadSessions() {
             const card = document.createElement("div");
             card.className = "session-card";
             
-            // Si coverUrl empieza por /uploads, lo cargamos relativo al sitio
-            // Si es una URL externa (http), se carga normal
-            const imgPath = s.coverUrl ? s.coverUrl : 'images/default-cover.jpg';
+            // LÓGICA DE RUTA DE IMAGEN CORREGIDA
+            let imgPath = 'images/audio.png'; // Fallback
+            if (s.coverUrl) {
+                const rawPath = s.coverUrl.trim();
+                if (rawPath.startsWith('http')) {
+                    imgPath = rawPath;
+                } else {
+                    // Aseguramos que empiece por / para que no sea relativa a la URL actual
+                    imgPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+                }
+            }
 
             card.innerHTML = `
                 <div class="cover-wrapper">
@@ -111,7 +119,7 @@ async function handleDownload(id, url) {
 
 // --- CRUD ---
 async function deleteSession(id) {
-    if (!confirm("¿Eliminar sesión?")) return;
+    if (!confirm("¿Eliminar sesión de la maleta?")) return;
     const token = localStorage.getItem("adminToken");
     const res = await fetch(`${API_URL}/sessions/${id}`, {
         method: "DELETE",
@@ -129,6 +137,8 @@ function prepareEdit(id, title, desc, year, url, cover) {
     document.getElementById("coverUrl").value = cover || "";
     
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
+    submitBtn.style.color = "#ffaa00";
+    submitBtn.style.borderColor = "#ffaa00";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -158,13 +168,17 @@ sessionForm.addEventListener("submit", async (e) => {
         });
 
         if (res.ok) {
-            showToast(editingSessionId ? "¡Actualizada!" : "¡Guardada!");
+            showToast(editingSessionId ? "¡Sesión actualizada!" : "¡Sesión guardada!");
             editingSessionId = null;
             sessionForm.reset();
             submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
+            submitBtn.style.color = "var(--neon-cyan)";
+            submitBtn.style.borderColor = "var(--neon-cyan)";
             loadSessions();
         }
-    } catch (err) { console.error(err); }
+    } catch (err) {
+        console.error("Error en la petición:", err);
+    }
 });
 
 // --- AUTH ---
@@ -203,6 +217,7 @@ djPhoto.addEventListener("click", () => {
     if(clickCount === 7) {
         adminFormContainer.style.display = "block";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        clickCount = 0; // Reset para seguridad
     }
 });
 

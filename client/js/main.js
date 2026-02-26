@@ -14,7 +14,6 @@ const adminFormContainer = document.getElementById("admin-form-container");
 let editingSessionId = null;
 let clickCount = 0;
 
-// --- UI & TOASTS ---
 function updateAdminUI() {
     const token = localStorage.getItem("adminToken");
     document.getElementById("admin-controls").style.display = token ? "block" : "none";
@@ -32,12 +31,10 @@ function showToast(message, color = "#00ffe0") {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// --- FILTROS ---
 function filterSessions() {
     const term = searchInput.value.toLowerCase();
     const year = yearFilter.value;
     const cards = document.querySelectorAll(".session-card");
-
     cards.forEach(card => {
         const title = card.querySelector("h3").textContent.toLowerCase();
         const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
@@ -59,7 +56,6 @@ function updateYearOptions(sessions) {
     yearFilter.value = current;
 }
 
-// --- CORE ---
 async function loadSessions() {
     try {
         const res = await fetch(`${API_URL}/sessions`);
@@ -73,8 +69,6 @@ async function loadSessions() {
             const card = document.createElement("div");
             card.className = "session-card";
             
-            // LÓGICA DE RUTA: Si no hay ruta, usa el icono por defecto.
-            // Si hay ruta, fuerza que empiece por / para evitar errores de carpeta.
             let imgPath = 'images/audio.png'; 
             if (s.coverUrl) {
                 const rawPath = s.coverUrl.trim();
@@ -85,18 +79,23 @@ async function loadSessions() {
                 }
             }
 
+            // IMPORTANTE: Escapamos las comillas de la descripción para evitar errores en el onclick
+            const safeDesc = s.description ? s.description.replace(/'/g, "\\'") : "";
+            const safeTitle = s.title ? s.title.replace(/'/g, "\\'") : "";
+            const safeCover = s.coverUrl ? s.coverUrl.replace(/'/g, "\\'") : "";
+
             card.innerHTML = `
                 <div class="cover-wrapper">
                     <img src="${imgPath}" alt="${s.title}" class="session-cover" onerror="this.src='images/audio.png'">
                 </div>
                 <div class="session-content">
                     <h3>${s.title} <span>(${s.year})</span></h3>
-                    <p>${s.description}</p>
+                    <p>${s.description || ''}</p>
                     <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
                     <div class="card-actions">
                         <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DOWNLOAD</button>
                         ${token ? `
-                            <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${s.title}', '${s.description}', '${s.year}', '${s.downloadUrl}', '${s.coverUrl}')">EDIT</button>
+                            <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${safeTitle}', '${safeDesc}', '${s.year}', '${s.downloadUrl}', '${safeCover}')">EDIT</button>
                             <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">DEL</button>
                         ` : ''}
                     </div>
@@ -115,7 +114,6 @@ async function handleDownload(id, url) {
     await fetch(`${API_URL}/sessions/${id}/download`, { method: "POST" });
 }
 
-// --- CRUD ---
 async function deleteSession(id) {
     if (!confirm("¿Eliminar sesión?")) return;
     const token = localStorage.getItem("adminToken");
@@ -128,11 +126,13 @@ async function deleteSession(id) {
 
 function prepareEdit(id, title, desc, year, url, cover) {
     editingSessionId = id;
-    document.getElementById("title").value = title;
-    document.getElementById("description").value = desc;
-    document.getElementById("year").value = year;
-    document.getElementById("downloadUrl").value = url;
-    document.getElementById("coverUrl").value = cover || "";
+    document.getElementById("title").value = title || "";
+    document.getElementById("description").value = desc || "";
+    document.getElementById("year").value = year || "";
+    document.getElementById("downloadUrl").value = url || "";
+    
+    // CORRECCIÓN: Si cover es 'undefined' o nulo, ponemos cadena vacía
+    document.getElementById("coverUrl").value = (cover === "undefined" || !cover) ? "" : cover;
     
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -172,7 +172,6 @@ sessionForm.addEventListener("submit", async (e) => {
     } catch (err) { console.error(err); }
 });
 
-// --- AUTH & EVENTOS ---
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const res = await fetch(`${API_URL}/login`, {

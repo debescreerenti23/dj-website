@@ -1,6 +1,5 @@
 const API_URL = "https://dj-website-bkfj.onrender.com";
 
-// ELEMENTOS DOM
 const loginForm = document.getElementById("login-form");
 const sessionForm = document.getElementById("session-form");
 const sessionsContainer = document.getElementById("sessions");
@@ -8,14 +7,20 @@ const logoutBtn = document.getElementById("logout-btn");
 const searchInput = document.getElementById("search-input");
 const yearFilter = document.getElementById("year-filter");
 const submitBtn = document.getElementById("submit-btn");
+const djPhoto = document.getElementById("dj-photo");
+const adminFormContainer = document.getElementById("admin-form-container");
 
 let editingSessionId = null;
+let clickCount = 0;
 
 // --- UI & TOASTS ---
 function updateAdminUI() {
     const token = localStorage.getItem("adminToken");
     document.getElementById("admin-controls").style.display = token ? "block" : "none";
-    loginForm.style.display = token ? "none" : "block";
+    // El contenedor del formulario de login solo se ve tras los 7 clics si no hay token
+    if (token) {
+        adminFormContainer.style.display = "none";
+    }
 }
 
 function showToast(message, color = "#00ffe0") {
@@ -38,10 +43,8 @@ function filterSessions() {
     cards.forEach(card => {
         const title = card.querySelector("h3").textContent.toLowerCase();
         const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
-        
         const matchSearch = title.includes(term);
         const matchYear = year === "all" || cardYear === year;
-        
         card.style.display = (matchSearch && matchYear) ? "block" : "none";
     });
 }
@@ -71,19 +74,26 @@ async function loadSessions() {
         sessions.forEach(s => {
             const card = document.createElement("div");
             card.className = "session-card";
+            
+            // Si coverUrl empieza por /uploads, lo cargamos relativo al sitio
+            // Si es una URL externa (http), se carga normal
+            const imgPath = s.coverUrl ? s.coverUrl : 'images/default-cover.jpg';
+
             card.innerHTML = `
                 <div class="cover-wrapper">
-                    <img src="${API_URL}${s.coverUrl}" alt="${s.title}" class="session-cover">
+                    <img src="${imgPath}" alt="${s.title}" class="session-cover" onerror="this.src='images/audio.png'">
                 </div>
-                <h3>${s.title} <span>(${s.year})</span></h3>
-                <p>${s.description}</p>
-                <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
-                <div class="card-actions">
-                    <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DOWNLOAD</button>
-                    ${token ? `
-                        <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${s.title}', '${s.description}', '${s.year}', '${s.downloadUrl}')">EDIT</button>
-                        <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">DEL</button>
-                    ` : ''}
+                <div class="session-content">
+                    <h3>${s.title} <span>(${s.year})</span></h3>
+                    <p>${s.description}</p>
+                    <p style="color:#00ffe0">⬇ <span id="count-${s.id}">${s.downloads || 0}</span> descargas</p>
+                    <div class="card-actions">
+                        <button class="traktor-btn" onclick="handleDownload('${s.id}', '${s.downloadUrl}')">DOWNLOAD</button>
+                        ${token ? `
+                            <button class="traktor-btn" onclick="prepareEdit('${s.id}', '${s.title}', '${s.description}', '${s.year}', '${s.downloadUrl}', '${s.coverUrl}')">EDIT</button>
+                            <button class="traktor-btn-danger" onclick="deleteSession('${s.id}')">DEL</button>
+                        ` : ''}
+                    </div>
                 </div>
             `;
             sessionsContainer.appendChild(card);
@@ -101,7 +111,7 @@ async function handleDownload(id, url) {
 
 // --- CRUD ---
 async function deleteSession(id) {
-    if (!confirm("¿Eliminar sesión de la maleta?")) return;
+    if (!confirm("¿Eliminar sesión?")) return;
     const token = localStorage.getItem("adminToken");
     const res = await fetch(`${API_URL}/sessions/${id}`, {
         method: "DELETE",
@@ -110,16 +120,15 @@ async function deleteSession(id) {
     if (res.ok) { showToast("Sesión eliminada"); loadSessions(); }
 }
 
-function prepareEdit(id, title, desc, year, url) {
+function prepareEdit(id, title, desc, year, url, cover) {
     editingSessionId = id;
     document.getElementById("title").value = title;
     document.getElementById("description").value = desc;
     document.getElementById("year").value = year;
     document.getElementById("downloadUrl").value = url;
+    document.getElementById("coverUrl").value = cover || "";
     
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
-    submitBtn.style.color = "#ffaa00";
-    submitBtn.style.borderColor = "#ffaa00";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -127,16 +136,13 @@ sessionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("adminToken");
 
-    // Construimos el objeto EXACTAMENTE como lo espera el servidor
     const data = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
-        year: document.getElementById("year").value.toString(), // Forzamos a texto por si acaso
+        year: document.getElementById("year").value.toString(),
         downloadUrl: document.getElementById("downloadUrl").value,
         coverUrl: document.getElementById("coverUrl").value
     };
-
-    console.log("Enviando estos datos:", data); // Esto te servirá para ver qué falla
 
     const method = editingSessionId ? "PUT" : "POST";
     const url = editingSessionId ? `${API_URL}/sessions/${editingSessionId}` : `${API_URL}/sessions`;
@@ -152,22 +158,16 @@ sessionForm.addEventListener("submit", async (e) => {
         });
 
         if (res.ok) {
-            showToast(editingSessionId ? "¡Sesión actualizada!" : "¡Sesión guardada!");
+            showToast(editingSessionId ? "¡Actualizada!" : "¡Guardada!");
             editingSessionId = null;
             sessionForm.reset();
             submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
             loadSessions();
-        } else {
-            const errorData = await res.json();
-            console.error("Error del servidor:", errorData);
-            showToast("Error al guardar: " + (errorData.message || "Revisa los campos"), "#ff004c");
         }
-    } catch (err) {
-        console.error("Error en la petición:", err);
-    }
+    } catch (err) { console.error(err); }
 });
 
-// --- AUTH & FILTERS ---
+// --- AUTH ---
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const res = await fetch(`${API_URL}/login`, {
@@ -179,8 +179,13 @@ loginForm.addEventListener("submit", async (e) => {
         })
     });
     const data = await res.json();
-    if (res.ok) { localStorage.setItem("adminToken", data.token); updateAdminUI(); loadSessions(); }
-    else showToast("Error de acceso", "#ff004c");
+    if (res.ok) { 
+        localStorage.setItem("adminToken", data.token); 
+        updateAdminUI(); 
+        loadSessions(); 
+    } else {
+        showToast("Error de acceso", "#ff004c");
+    }
 });
 
 logoutBtn.addEventListener("click", () => {
@@ -189,21 +194,17 @@ logoutBtn.addEventListener("click", () => {
     loadSessions();
 });
 
+// --- EVENTOS ---
 searchInput.addEventListener("input", filterSessions);
 yearFilter.addEventListener("change", filterSessions);
-
-let clickCount = 0;
-const adminFormContainer = document.getElementById("admin-form-container");
-
-const djPhoto = document.getElementById("dj-photo");
 
 djPhoto.addEventListener("click", () => {
     clickCount++;
     if(clickCount === 7) {
-        adminFormContainer.style.display = "block"
+        adminFormContainer.style.display = "block";
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 });
-
 
 updateAdminUI();
 loadSessions();

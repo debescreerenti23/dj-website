@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Javilindj</title>
+  <title>Javilindj | Admin Console</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="shortcut icon" href="images/audio.png" type="image/png">
@@ -21,15 +21,13 @@
   </div>
 
   <section id="admin-zone" class="admin-section">
-    <div id="admin-form-container">
+    <div id="admin-form-container" style="display:none;">
       <form id="login-form">
-      <input type="text" id="username" placeholder="Usuario" required>
-      <input type="password" id="password" placeholder="Contraseña" required>
-      <button type="submit" class="traktor-btn">ACCEDER</button>
-    </form>
-
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit" class="traktor-btn">ACCEDER</button>
+      </form>
     </div>
-    
     
     <div id="admin-controls" style="display:none;">
       <div class="admin-dashboard">
@@ -44,7 +42,11 @@
             <div class="input-group">
               <label for="title">TÍTULO DE LA SESIÓN</label>
               <input type="text" id="title" placeholder="Ej: Hardcore Session Vol.1" required>
-              <input type="text" id="coverUrl" placeholder="Link carátula (https://dj-website-bkfj.onrender.com/uploads/sesion1.jpg)" required>
+            </div>
+
+            <div class="input-group">
+              <label for="coverUrl">RUTA DE CARÁTULA (Ej: /uploads/sesion1.jpg)</label>
+              <input type="text" id="coverUrl" placeholder="/uploads/nombre-imagen.jpg">
             </div>
             
             <div class="input-row">
@@ -88,12 +90,11 @@
   </div>
 
   <div id="sessions" class="sessions-grid"></div>
-
   <div id="toast-container"></div>
 
   <section id="contact" class="contact-section">
     <div class="social-container">
-        <a href="https://instagram.com/javilindj" target="_blank" class="social-item" rel="noopener">
+        <a href="https://instagram.com/javilindj" target="_blank" class="social-item">
             <i class="fab fa-instagram"></i>
             <span>Instagram</span>
         </a>
@@ -101,11 +102,9 @@
             <i class="far fa-envelope"></i>
             <span>Email</span>
         </a>
-        <a href="#" target="_blank" class="social-item" rel="noopener">
-            <i class="fab fa-soundcloud"></i>
-            <span>Soundcloud</span>
-        </a>
     </div>
-  </section> <script src="js/main.js"></script>
+  </section>
+
+  <script src="js/main.js"></script>
 </body>
 </html>

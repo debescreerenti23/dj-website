@@ -269,7 +269,7 @@ body {
 }
 
 .session-card {
-    background: transparent;
+    background: #222;
     border: 1px solid #111;
     padding: 10px;
     border-radius: 12px;
@@ -333,7 +333,7 @@ body {
     height: 100% !important;
     object-fit: cover !important;
     display: block !important;
-    background-color: #222; /* Si falla la foto, al menos que se vea negro y no gris */
+    background-color: transparent; /* Si falla la foto, al menos que se vea negro y no gris */
 }
 
 .cover-wrapper {

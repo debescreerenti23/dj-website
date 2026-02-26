@@ -1,5 +1,6 @@
 const API_URL = "https://dj-website-bkfj.onrender.com";
 
+// ELEMENTOS DEL DOM
 const loginForm = document.getElementById("login-form");
 const sessionForm = document.getElementById("session-form");
 const sessionsContainer = document.getElementById("sessions");
@@ -13,14 +14,21 @@ const adminFormContainer = document.getElementById("admin-form-container");
 let editingSessionId = null;
 let clickCount = 0;
 
+// --- INTERFAZ Y NOTIFICACIONES ---
 function updateAdminUI() {
     const token = localStorage.getItem("adminToken");
-    document.getElementById("admin-controls").style.display = token ? "block" : "none";
-    if (token) adminFormContainer.style.display = "none";
+    const adminControls = document.getElementById("admin-controls");
+    if (adminControls) {
+        adminControls.style.display = token ? "block" : "none";
+    }
+    if (token && adminFormContainer) {
+        adminFormContainer.style.display = "none";
+    }
 }
 
 function showToast(message, color = "#00ffe0") {
     const container = document.getElementById("toast-container");
+    if (!container) return;
     const toast = document.createElement("div");
     toast.className = "toast";
     toast.style.borderColor = color;
@@ -30,57 +38,63 @@ function showToast(message, color = "#00ffe0") {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// --- FILTROS ---
 function filterSessions() {
     const term = searchInput.value.toLowerCase();
     const year = yearFilter.value;
     const cards = document.querySelectorAll(".session-card");
+
     cards.forEach(card => {
         const title = card.querySelector("h3").textContent.toLowerCase();
         const cardYear = card.querySelector("h3 span").textContent.replace(/[()]/g, "");
-        card.style.display = (title.includes(term) && (year === "all" || cardYear === year)) ? "flex" : "none";
+        const matchSearch = title.includes(term);
+        const matchYear = year === "all" || cardYear === year;
+        card.style.display = (matchSearch && matchYear) ? "flex" : "none";
     });
 }
 
 function updateYearOptions(sessions) {
-    const years = [...new Set(sessions.map(s => s.year))].sort((a,b) => b-a);
+    const years = [...new Set(sessions.map(s => s.year))].sort((a, b) => b - a);
     const current = yearFilter.value;
     yearFilter.innerHTML = '<option value="all">Todos los años</option>';
     years.forEach(y => {
         const opt = document.createElement("option");
-        opt.value = y; opt.textContent = y;
+        opt.value = y;
+        opt.textContent = y;
         yearFilter.appendChild(opt);
     });
     yearFilter.value = current;
 }
 
+// --- CORE: CARGAR SESIONES ---
 async function loadSessions() {
     try {
         const res = await fetch(`${API_URL}/sessions`);
         const sessions = await res.json();
         const token = localStorage.getItem("adminToken");
-        
+
         updateYearOptions(sessions);
         sessionsContainer.innerHTML = "";
 
         sessions.forEach(s => {
             const card = document.createElement("div");
             card.className = "session-card";
-            
-            // LÓGICA DE RUTA ABSOLUTA
-            let imgPath = 'images/audio.png'; 
-            if (s.coverUrl && s.coverUrl.trim() !== "") {
+
+            // Lógica de imagen: Prioriza URL, luego ruta local, luego fallback
+            let imgPath = 'images/audio.png';
+            if (s.coverUrl && s.coverUrl !== "undefined" && s.coverUrl.trim() !== "") {
                 const rawPath = s.coverUrl.trim();
                 if (rawPath.startsWith('http')) {
                     imgPath = rawPath;
                 } else {
-                    // Forzamos que empiece por / para que sea una ruta raíz
                     imgPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
                 }
             }
 
-            const safeDesc = s.description ? s.description.replace(/'/g, "\\'") : "";
-            const safeTitle = s.title ? s.title.replace(/'/g, "\\'") : "";
-            const safeCover = s.coverUrl ? s.coverUrl.replace(/'/g, "\\'") : "";
+            // Escapado de caracteres para evitar errores en el onclick
+            const safeTitle = (s.title || "").replace(/'/g, "\\'");
+            const safeDesc = (s.description || "").replace(/'/g, "\\'");
+            const safeCover = (s.coverUrl && s.coverUrl !== "undefined") ? s.coverUrl.replace(/'/g, "\\'") : "";
 
             card.innerHTML = `
                 <div class="cover-wrapper">
@@ -102,9 +116,12 @@ async function loadSessions() {
             sessionsContainer.appendChild(card);
         });
         filterSessions();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+        console.error("Error cargando sesiones:", err);
+    }
 }
 
+// --- MANEJO DE DESCARGAS ---
 async function handleDownload(id, url) {
     window.open(url, "_blank");
     const el = document.getElementById(`count-${id}`);
@@ -112,14 +129,18 @@ async function handleDownload(id, url) {
     await fetch(`${API_URL}/sessions/${id}/download`, { method: "POST" });
 }
 
+// --- CRUD OPERACIONES ---
 async function deleteSession(id) {
-    if (!confirm("¿Eliminar sesión?")) return;
+    if (!confirm("¿Seguro que quieres eliminar esta sesión?")) return;
     const token = localStorage.getItem("adminToken");
     const res = await fetch(`${API_URL}/sessions/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
     });
-    if (res.ok) { showToast("Sesión eliminada"); loadSessions(); }
+    if (res.ok) {
+        showToast("Sesión eliminada");
+        loadSessions();
+    }
 }
 
 function prepareEdit(id, title, desc, year, url, cover) {
@@ -128,9 +149,10 @@ function prepareEdit(id, title, desc, year, url, cover) {
     document.getElementById("description").value = desc || "";
     document.getElementById("year").value = year || "";
     document.getElementById("downloadUrl").value = url || "";
-    // Limpiamos el valor de cover si viene como undefined string
-    document.getElementById("coverUrl").value = (cover === "undefined" || !cover) ? "" : cover;
     
+    // Si la carátula es "undefined" o vacía, dejamos el campo en blanco
+    document.getElementById("coverUrl").value = (cover === "undefined" || !cover) ? "" : cover;
+
     submitBtn.innerHTML = '<i class="fas fa-edit"></i> ACTUALIZAR SESIÓN';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -138,6 +160,7 @@ function prepareEdit(id, title, desc, year, url, cover) {
 sessionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("adminToken");
+
     const data = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
@@ -152,35 +175,48 @@ sessionForm.addEventListener("submit", async (e) => {
     try {
         const res = await fetch(url, {
             method: method,
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            headers: { 
+                "Content-Type": "application/json", 
+                "Authorization": `Bearer ${token}` 
+            },
             body: JSON.stringify(data)
         });
+
         if (res.ok) {
-            showToast(editingSessionId ? "¡Actualizada!" : "¡Guardada!");
+            showToast(editingSessionId ? "¡Sesión actualizada!" : "¡Sesión guardada!");
             editingSessionId = null;
             sessionForm.reset();
             submitBtn.innerHTML = '<i class="fas fa-save"></i> GUARDAR EN LIBRERÍA';
             loadSessions();
         }
-    } catch (err) { console.error(err); }
+    } catch (err) {
+        console.error("Error al guardar:", err);
+    }
 });
 
+// --- AUTENTICACIÓN ---
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const res = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            username: document.getElementById("username").value, 
-            password: document.getElementById("password").value 
-        })
-    });
-    const data = await res.json();
-    if (res.ok) { 
-        localStorage.setItem("adminToken", data.token); 
-        updateAdminUI(); 
-        loadSessions(); 
-    } else showToast("Error de acceso", "#ff004c");
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                username: document.getElementById("username").value, 
+                password: document.getElementById("password").value 
+            })
+        });
+        const data = await res.json();
+        if (res.ok) { 
+            localStorage.setItem("adminToken", data.token); 
+            updateAdminUI(); 
+            loadSessions(); 
+        } else {
+            showToast("Credenciales incorrectas", "#ff004c");
+        }
+    } catch (err) {
+        showToast("Error de conexión", "#ff004c");
+    }
 });
 
 logoutBtn.addEventListener("click", () => {
@@ -189,9 +225,11 @@ logoutBtn.addEventListener("click", () => {
     loadSessions();
 });
 
+// --- EVENTOS ADICIONALES ---
 searchInput.addEventListener("input", filterSessions);
 yearFilter.addEventListener("change", filterSessions);
 
+// Revelar panel de admin tras 7 clics en la foto del DJ
 djPhoto.addEventListener("click", () => {
     clickCount++;
     if(clickCount === 7) {
@@ -201,5 +239,6 @@ djPhoto.addEventListener("click", () => {
     }
 });
 
+// Inicialización
 updateAdminUI();
 loadSessions();

@@ -239,6 +239,15 @@ djPhoto.addEventListener("click", () => {
     }
 });
 
+// Seleccionamos el elemento por su ID
+const yearSpan = document.getElementById('year');
+
+// Creamos un objeto de fecha y extraemos el año actual
+const currentYear = new Date().getFullYear();
+
+// Insertamos el año en el HTML
+yearSpan.textContent = currentYear;
+
 // Inicialización
 updateAdminUI();
 loadSessions();

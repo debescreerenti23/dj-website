@@ -340,3 +340,12 @@ body {
     background: transparent !important;
     border: none !important;
 }
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #64748b;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    margin-top: 40px;
+}
